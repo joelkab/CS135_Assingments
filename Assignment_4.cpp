@@ -36,6 +36,16 @@ int Com_turn(int &P_MATCHES, int &calculation)
 {
     calculation = P_MATCHES % 4;
 
+        if(calculation == 0){
+            calculation = 3;
+        } else if(calculation == 1){
+            calculation =1;
+        } else if(calculation == 3){
+            calculation =2;
+        } else if(calculation ==2) {
+            calculation =1;
+        }
+
     return calculation;
 }
 
@@ -93,6 +103,7 @@ int main()
         // computer turn
         while (MATCHES > 1)
         {
+            
 
             cout << "Computer Turn - Matches:";
             // calling player_trun function
@@ -101,23 +112,31 @@ int main()
 
             cout << endl;
             cout << MATCHES << endl;
-            cout << "Computer removes";
 
+            
+            cout << "Computer removes ";
             Com_turn(MATCHES, Com_remove);
+            cout << Com_remove <<" ."<<endl;
 
-            cout << Com_remove <<"."<<endl;
             // player turn
             cout << "Player Turn - Matches:";
             Print_Macthes(Com_remove, MATCHES);
 
             cout << endl;
 
+            if(MATCHES == 1){
+                cout<<"Game Over - Computer wins.";
+                return 0;
+            }
+            
             cout << MATCHES << endl;
-
-            cout << "Player Turn - Matches:";
-            cout << endl;
             cout << "Remove (1 - 3):";
             cin >> Num_remove;
+
+            if(MATCHES == 2){
+                cout<<"Game Over - Player wins.";
+                return 0;
+            }
         }
 
     } while (cin.fail());
