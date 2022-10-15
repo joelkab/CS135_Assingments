@@ -59,8 +59,8 @@ int Com_turn(int &P_MATCHES, int &calculation)
 int main()
 {
 
-    char yes_no;
-    char again = ' ';
+    string yes_no;
+    string again;
     bool playagin = false, showSwitch = true;
     int Num_remove = 0, Com_remove = 0, MATCHES = 21;
 
@@ -68,43 +68,50 @@ int main()
          << endl;
     cout << "Would you like to go first? (Y/N):";
     cin >> yes_no;
+    cout<<endl;
     do
-    {
-        
+    { 
         if (playagin == true)
         {
-            cout << "Would you like to go first? (Y/N):";
+
+            cout << "Would you like to go first? (Y/N):"<<endl;
             cin >> yes_no;
             playagin = false;
         }
+        
+        while (yes_no != "y" && yes_no != "Y" && yes_no != "N" && yes_no != "n" )
+        {   cout<<"Please, answer Y or N."<<endl;
+            cout<<endl;
+             cout << "Would you like to go first? (Y/N):";
+             cin >> yes_no;
+             cout<<endl;
+            
+        }
+        
+        
 
         if (showSwitch == true)
         {
-            // handling user input
-            switch (yes_no)
-            {
-            case 'Y':
-            case 'y':
 
-                break;
-            case 'N':
-            case 'n':
+            if(yes_no == "Y" || yes_no == "y") {
+                
+            } else if(yes_no == "N" || yes_no == "n") {
                 // computer turn
                 cout << "Computer Turn - Matches:";
                 Print_Macthes(Com_remove, MATCHES);
                 cout << endl;
+                cout<<endl;
                 // n
                 cout << "Computer removes ";
                 Com_turn(MATCHES, Com_remove);
 
                 cout << Com_remove << " ." << endl;
+                cout<<endl;
                 showSwitch = false;
-                break;
-
-            default:
-                cout << "Please, answer Y or N."<<endl;
-                break;
+                
             }
+
+            // handling user input
         }
         // player goes first
 
@@ -122,31 +129,35 @@ int main()
 
             cout << "Would you like to play again? (Y/N):";
             cin >> again;
+            MATCHES = 21;
+            Num_remove =0;
+            Com_remove =0;
 
-            switch (again)
-            {
-            case 'y':
-            case 'Y':
-                cout << "you entered yes" << endl;
-                MATCHES = 21;
+            while (again != "y" && again != "Y" && again != "N" && again != "n" )
+        {   cout<<"Please, answer Y or N."<<endl;
+            cout<<endl;
+             cout << "Would you like to play again? (Y/N):";
+             cin >> again;
+             cout<<endl;
+            
+        }
+        if(again == "Y" || again == "y") {
                 playagin = true;
                 showSwitch = true;
                 continue;
-
-            case 'N':
-            case 'n':
+                
+            } else if(again == "N" || again == "n") {
                 return 0;
-
-            default:
-                break;
             }
-            continue;
+
+        
         }
         // end of switch
         cout << endl;
         cout << endl;
         cout << "Remove (1 - 3):";
         cin >> Num_remove;
+        
 
         // validating
         if (cin.fail() || Num_remove > 3 || Num_remove < 1)
@@ -173,29 +184,29 @@ int main()
 
             cout << "Would you like to play again? (Y/N):";
             cin >> again;
+             MATCHES = 21;
+             Num_remove =0;
+            Com_remove =0;
             cin.clear();
-
-           
-
-            switch (again)
-            {
-            case 'y':
-            case 'Y':
-                cout << "you entered yes" << endl;
-                MATCHES = 21;
-
+            while (again != "y" && again != "Y" && again != "N" && again != "n" )
+        {   cout<<"Please, answer Y or N."<<endl;
+            cout<<endl;
+             cout << "Would you like to play again? (Y/N):";
+             cin >> again;
+             cout<<endl;
+            
+        }
+        if(again == "Y" || again == "y") {
+             MATCHES = 21;
                 playagin = true;
                 showSwitch = true;
                 continue;
-
-            case 'N':
-            case 'n':
+                
+            } else if(again == "N" || again == "n") {
                 return 0;
-
-            default:
-                break;
             }
-            continue;
+
+        
         }
 //endf of checking
         cout << endl;
