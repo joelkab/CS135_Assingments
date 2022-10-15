@@ -12,15 +12,15 @@ Output: 12 + 9 = 21
 // Preprocessor Directives
 
 #include <iostream>
-#include <math.h>
 #include <cstring>
 
 using namespace std;
 
-int Print_Macthes(int Remove, int &MATCHES)
+int Print_Macthes(int &Remove, int &MATCHES)
 {
 
     MATCHES = MATCHES - Remove;
+
     for (int i = 0; i < MATCHES; i++)
     {
         if (i % 5 == 0)
@@ -36,15 +36,22 @@ int Com_turn(int &P_MATCHES, int &calculation)
 {
     calculation = P_MATCHES % 4;
 
-        if(calculation == 0){
-            calculation = 3;
-        } else if(calculation == 1){
-            calculation =1;
-        } else if(calculation == 3){
-            calculation =2;
-        } else if(calculation ==2) {
-            calculation =1;
-        }
+    if (calculation == 0)
+    {
+        calculation = 3;
+    }
+    else if (calculation == 1)
+    {
+        calculation = 1;
+    }
+    else if (calculation == 3)
+    {
+        calculation = 2;
+    }
+    else if (calculation == 2)
+    {
+        calculation = 1;
+    }
 
     return calculation;
 }
@@ -53,93 +60,159 @@ int main()
 {
 
     char yes_no;
+    char again = ' ';
+    bool playagin = false, showSwitch = true;
     int Num_remove = 0, Com_remove = 0, MATCHES = 21;
 
     cout << "The game of Nim.  The player to remove the last match loses." << endl
          << endl;
     cout << "Would you like to go first? (Y/N):";
     cin >> yes_no;
-
     do
     {
-
-        // handling user input
-        switch (yes_no)
+        
+        if (playagin == true)
         {
-        case 'Y':
-        case 'y':
-            cout << "Player Turn - Matches:";
-            // for loop
-            for (int i = 0; i < MATCHES; i++)
-            {
+            cout << "Would you like to go first? (Y/N):";
+            cin >> yes_no;
+            playagin = false;
+        }
 
-                if (i % 5 == 0)
-                {
-                    cout << " ";
-                }
-                cout << "|";
+        if (showSwitch == true)
+        {
+            // handling user input
+            switch (yes_no)
+            {
+            case 'Y':
+            case 'y':
+
+                break;
+            case 'N':
+            case 'n':
+                // computer turn
+                cout << "Computer Turn - Matches:";
+                Print_Macthes(Com_remove, MATCHES);
+                cout << endl;
+                // n
+                cout << "Computer removes ";
+                Com_turn(MATCHES, Com_remove);
+
+                cout << Com_remove << " ." << endl;
+                showSwitch = false;
+                break;
+
+            default:
+                cout << "Please, answer Y or N."<<endl;
+                break;
             }
-            // end of for loop
+        }
+        // player goes first
+
+        cout << "Player Turn - Matches:";
+
+        Print_Macthes(Com_remove, MATCHES);
+
+        // checking if matches is equal to 1 then the computer wins 
+        if (MATCHES == 1)
+        {
             cout << endl;
-            cout << "Remove (1 - 3):";
-            cin >> Num_remove;
-            // validating
-            if (cin.fail() || Num_remove > 3 || Num_remove < 1)
+            cout << endl;
+            cout << "Game Over - Computer wins." << endl;
+            cout << endl;
+
+            cout << "Would you like to play again? (Y/N):";
+            cin >> again;
+
+            switch (again)
             {
-                cout << "Please, type 1, 2, or 3 as your response.";
+            case 'y':
+            case 'Y':
+                cout << "you entered yes" << endl;
+                MATCHES = 21;
+                playagin = true;
+                showSwitch = true;
+                continue;
+
+            case 'N':
+            case 'n':
                 return 0;
+
+            default:
+                break;
             }
+            continue;
+        }
+        // end of switch
+        cout << endl;
+        cout << endl;
+        cout << "Remove (1 - 3):";
+        cin >> Num_remove;
 
-            break;
-        case 'N':
-        case 'n':
-            cout << "you entered Y";
-            break;
+        // validating
+        if (cin.fail() || Num_remove > 3 || Num_remove < 1)
+        {
+            cin.clear();
 
-        default:
-            cout << "Please, answer Y or N.";
+            cout << "Please, type 1, 2, or 3 as your response." << endl;
             break;
         }
         // computer turn
-        while (MATCHES > 1)
+        cout << "Computer Turn - Matches:";
+
+        // calling player_trun function
+
+        Print_Macthes(Num_remove, MATCHES);
+        cout << endl;
+//checking if the player has won
+        if (MATCHES == 1)
         {
-            
-
-            cout << "Computer Turn - Matches:";
-            // calling player_trun function
-
-            Print_Macthes(Num_remove, MATCHES);
-
             cout << endl;
-            cout << MATCHES << endl;
-
-            
-            cout << "Computer removes ";
-            Com_turn(MATCHES, Com_remove);
-            cout << Com_remove <<" ."<<endl;
-
-            // player turn
-            cout << "Player Turn - Matches:";
-            Print_Macthes(Com_remove, MATCHES);
-
+            cout << endl;
+            cout << "Game over - Player wins." << endl;
             cout << endl;
 
-            if(MATCHES == 1){
-                cout<<"Game Over - Computer wins.";
-                return 0;
-            }
-            
-            cout << MATCHES << endl;
-            cout << "Remove (1 - 3):";
-            cin >> Num_remove;
+            cout << "Would you like to play again? (Y/N):";
+            cin >> again;
+            cin.clear();
 
-            if(MATCHES == 2){
-                cout<<"Game Over - Player wins.";
+           
+
+            switch (again)
+            {
+            case 'y':
+            case 'Y':
+                cout << "you entered yes" << endl;
+                MATCHES = 21;
+
+                playagin = true;
+                showSwitch = true;
+                continue;
+
+            case 'N':
+            case 'n':
                 return 0;
+
+            default:
+                break;
             }
+            continue;
         }
+//endf of checking
+        cout << endl;
+        cout << "Computer removes ";
+        Com_turn(MATCHES, Com_remove);
+        cout << Com_remove << "." << endl;
 
-    } while (cin.fail());
+        // player turn
+        // cout << "Player Turn - Matches:";
+        // Print_Macthes(Com_remove, MATCHES);
+
+        cout << endl;
+
+        // cout << "Remove (1 - 3):";
+        // cin >> Num_remove;
+
+    } while (cin.fail() || MATCHES > 1);
 
     return 0;
 }
