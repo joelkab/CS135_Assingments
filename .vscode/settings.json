@@ -2,6 +2,10 @@
     "files.associations": {
         "iostream": "cpp",
         "ostream": "cpp",
-        "ios": "cpp"
+        "ios": "cpp",
+        "fstream": "cpp",
+        "locale": "cpp",
+        "istream": "cpp",
+        "iomanip": "cpp"
     }
 }
