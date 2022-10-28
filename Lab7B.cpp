@@ -1,8 +1,8 @@
 /*
 Name: Jeol Kabura, 2001972424 , 1006, Lab 6b
-Description: practice using basic input/output, file input, and two dimensional arrays.
-Input: Prompts the user for a filename and reads the filename into a string.
-Output: out puts the data in the file including the SUM OF ALL THE NUMBERS.
+Description:  practice file i/o, reading data into 2D arrays, and processing data contained within 2D arrays.
+Input: Prompts the user for a filename and reads the filename into a 2darray.
+Output: out puts the Max,min,ave min and ave max.
 */
 #include <iostream>
 #include <fstream>
@@ -33,7 +33,7 @@ int main()
     // double avrage = arr[0];
     do
     {
-        cout << "Enter a file name" << endl
+        cout << "Enter file name" << endl
              << "**";
         getline(cin, filename);
         cout << endl;
@@ -43,7 +43,7 @@ int main()
             // if the input is not vaild
             cout << "Error: Invalid file name" << endl;
             fileReader.clear();
-            cout << "Enter a file name" << endl
+            cout << "Enter file name" << endl
                  << "**";
 
             getline(cin, filename);
@@ -56,8 +56,10 @@ int main()
 
         while (!fileReader.eof())
         {
+            // reading the firstline of the file
             if (First_Line == true)
             {
+                // getting the data
                 fileReader >> First_array[cnt];
                 fileReader >> sec_line[cnt];
                 First_Line = false;
@@ -67,7 +69,7 @@ int main()
             {
                 for (int j = 0; j < COlUM_CONT; j++)
                 {
-
+                    // reading the rest of the file.
                     fileReader >> array2d[i][j];
                 }
             }
@@ -86,38 +88,43 @@ int main()
 
         // outputing the results
         /// finding the sum of all the rows
+        // outer loop
         for (int i = 0; i < ROW_COUNT; i++)
         {
+            // inner loop
             for (int j = 0; j < COlUM_CONT; j++)
             {
 
-                cout << array2d[i][1] << " ";
+                // cout << array2d[i][1] << " ";
                 if (array2d[i][j] > max)
                 {
+                    // max
                     max = array2d[i][j];
                 }
                 if (array2d[i][j] < min)
                 {
+
+                    // min
                     min = array2d[i][j];
                 }
 
                 sum_min += array2d[i][0];
                 sum_max += array2d[i][1];
-                //cout << "this si the array :" << array2d[i][0];
+                // cout << "this si the array :" << array2d[i][0];
             }
-            cout << endl;
         }
-        
+        // prints the city and the year
         for (int i = 0; i < 1; i++)
         {
             cout << First_array[i] << " " << sec_line[i] << endl;
         }
-        cout<<fixed<<setprecision(2);
-        cout << "Lowest temperature of the year was "<<min/24<<"° F." << endl;
-        cout << "Highest temperature of the year was "<<max/24<<"° F." << endl;
-        
-        cout << "Average low temperature of the year was "<<sum_min/24<<"° F."<< endl;
-        cout << "Average high temperature of the year was "<<sum_max/24<<"° F."<< endl;
+        cout << fixed << setprecision(2);
+        // prints the highest and coldest temps
+        cout << "Lowest temperature of the year was " << min << "° F." << endl;
+        cout << "Highest temperature of the year was " << max << "° F." << endl;
+        // prints the averages
+        cout << "Average low temperature of the year was " << sum_min / 24 << "° F." << endl;
+        cout << "Average high temperature of the year was " << sum_max / 24 << "° F." << endl;
     } while (cin.fail());
     return 0;
 }
