@@ -84,9 +84,7 @@ int main()
  ofile.open("[10-09-2022] Report.txt");
         for (int i = 0; i < cnt; i++)
         {
-            // cout << "plate: " << Lic_plate[i] << " Date:" << date[i] << " Time" << Time[i]
-            //  << " weight:" << Weight[i] << " speed:" << Speed[i] << endl;
-            // sum += Weight[i] + Speed[i];
+            
             if ((Weight[i] > 5000 && Speed[i] > 30) || (Weight[i] < 5000 && Speed[i] > 45))
             {
                 violations++;
