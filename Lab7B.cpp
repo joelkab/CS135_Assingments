@@ -17,12 +17,12 @@ int main()
     double max = 0;
     double min = 200;
     double sum_min = 0;
-
+    double sum_max = 0;
     // Create an input stream to read a file
     ifstream fileReader;
     string filename = " ";
     string name = " ";
-    double sum_max = 0;
+
     bool First_Line = true;
 
     // declaring arrays
@@ -108,10 +108,11 @@ int main()
                     min = array2d[i][j];
                 }
 
-                sum_min += array2d[i][0];
-                sum_max += array2d[i][1];
+                
                 // cout << "this si the array :" << array2d[i][0];
             }
+            sum_min += array2d[i][0];
+            sum_max += array2d[i][1];
         }
         // prints the city and the year
         for (int i = 0; i < 1; i++)
@@ -123,8 +124,8 @@ int main()
         cout << "Lowest temperature of the year was " << min << "° F." << endl;
         cout << "Highest temperature of the year was " << max << "° F." << endl;
         // prints the averages
-        cout << "Average low temperature of the year was " << sum_min / 24 << "° F." << endl;
-        cout << "Average high temperature of the year was " << sum_max / 24 << "° F." << endl;
+        cout << "Average low temperature of the year was " << sum_min / 12 << "° F." << endl;
+        cout << "Average high temperature of the year was " << sum_max / 12 << "° F." << endl;
     } while (cin.fail());
     return 0;
 }
