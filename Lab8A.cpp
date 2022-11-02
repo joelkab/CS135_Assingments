@@ -14,85 +14,83 @@ Output: draws n of trangles.
 #include <cstring>
 
 using namespace std;
-
-int getIntegerInput(string promt, int numMin, int numMax)
+// getting the interger
+int getIntegerInput(string promt, int numMin, int numMax, int &num)
 {
-    int num = 0;
-    cout << promt;
+
+    cout << promt << endl
+         << "**";
     cin >> num;
-    
-    do { 
-        cin.clear();
-        cin.ignore(100, '\n');
-        cout << "Error: Invalid entry, please retry" << endl;
-        // cout << promt;
-        // cin >> num;
-        continue;
-    }while (cin.fail() || num <numMin && num >numMax);
+    if (cin.fail() || num < numMin || num > numMax)
+    {
+
+        while (cin.fail() || num < numMin || num > numMax)
+        {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Error: Invalid entry, please retry" << endl;
+
+            cout << promt << endl
+                 << "**";
+            cin >> num;
+        }
+    }
 
     return num;
 }
-char getCharacterInput(string prompt,char &charT){
-    
-    cout<<prompt<<endl<<"**";
-    cin>>charT;
 
+// getting the character
+char getCharacterInput(string prompt, char &charT)
+{
+
+    cout << prompt << endl
+         << "**";
+    cin >> charT;
+    // returns the the character
     return charT;
+}
+// printing the upside down triangle
+void writeUpsideDownTriangle(int size, char character)
+{
+    for (int i = 0; i < size; i++)
+    {
+
+        for (int j = 0; j < size; j++)
+        {
+            if (i <= j)
+            {
+                cout << character;
+            }
+        }
+        cout << endl;
+    }
+}
+// printing rightsideuptriangle
+void writeRightsideUpTriangle(int size, char character)
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (i >= j)
+            {
+                cout << character;
+            }
+        }
+        cout << endl;
+    }
 }
 
 int main()
 {
-    int n = 0;
-
-    do
-    {
-        if (cin.fail())
-        {
-            cin.clear();
-            cin.ignore(10, '\n');
-            continue;
-        }
-
-        cout << "Enter a count between 2 and 20" << endl
-             << "**";
-        cin >> n;
-        cout << endl;
-        /// checking for correct input
-        if (n >= 2 && n <= 20)
-        {
-            // first for loop
-            for (int i = 0; i < n; i++)
-            {
-
-                for (int j = 0; j < n; j++)
-                {
-                    if (i <= j)
-                    {
-                        cout << "*";
-                    }
-                }
-                cout << endl;
-            }
-            // secound forloop
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                {
-                    if (i >= j)
-                    {
-                        cout << "*";
-                    }
-                }
-                cout << endl;
-            }
-            // if input is wrong
-        }
-        else
-        {
-            cout << "Error: Invalid entry, please retry" << endl;
-        }
-        // if input is incorrect or fails
-    } while (cin.fail() || n < 2 || n > 20);
+    string promt = "Enter a count between 2 and 20";
+    string char_promt = "Enter a character";
+    char CHART = ' ';
+    int NUM = 0, Min = 0, Max = 0;
+    getIntegerInput(promt, Min, Max, NUM);
+    getCharacterInput(char_promt, CHART);
+    writeUpsideDownTriangle(NUM, CHART);
+    writeRightsideUpTriangle(NUM, CHART);
 
     return 0;
 }
