@@ -17,24 +17,22 @@ using namespace std;
 // getting the interger
 int getIntegerInput(string promt, int numMin, int numMax, int &num)
 {
-
+do {
     cout << promt << endl
          << "**";
     cin >> num;
-    if (cin.fail() || num < numMin || num > numMax)
-    {
-
-        while (cin.fail() || num < numMin || num > numMax)
-        {
+    if (cin.fail()){
             cin.clear();
             cin.ignore(1000, '\n');
             cout << "Error: Invalid entry, please retry" << endl;
-
-            cout << promt << endl
-                 << "**";
-            cin >> num;
-        }
+            continue;
     }
+            
+
+}while (cin.fail()||num<numMin || num >numMax);
+
+
+    
 
     return num;
 }
@@ -86,7 +84,7 @@ int main()
     string promt = "Enter a count between 2 and 20";
     string char_promt = "Enter a character";
     char CHART = ' ';
-    int NUM = 0, Min = 0, Max = 0;
+    int NUM = 0, Min = 2, Max = 20;
     getIntegerInput(promt, Min, Max, NUM);
     getCharacterInput(char_promt, CHART);
     writeUpsideDownTriangle(NUM, CHART);
