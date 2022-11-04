@@ -28,8 +28,11 @@ int main()
     // storing the data from get doubel.
     double INPUT = getDoubleInput(promt, min, max);
     // calling the functions
-    circumference(INPUT);
-    area(INPUT);
+    double circum = circumference(INPUT);
+    double ar= area(INPUT);
+
+    cout << fixed << setprecision(2) << "Circumference: " << circum << endl;
+    cout << fixed << setprecision(2) << "Area: " << ar;
 }
 
 // start of the functions
@@ -78,7 +81,7 @@ double area(double radius)
 {
     double NUM = 0.0;
     NUM = (Pie * radius * radius);
-    cout << fixed << setprecision(2) << "Area: " << NUM;
+    //cout << fixed << setprecision(2) << "Area: " << NUM;
     // returns the area
     return NUM;
 }
@@ -88,7 +91,7 @@ double circumference(double radius)
 {
     double NUM = 0.0;
     NUM = (2 * Pie * radius);
-    cout << fixed << setprecision(2) << "Circumference: " << NUM << endl;
+    //cout << fixed << setprecision(2) << "Circumference: " << NUM << endl;
     // returns the circumference
     return NUM;
 }
