@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <ctype.h>
 
 using namespace std;
 
@@ -46,6 +47,7 @@ vector<vector<char> > replace2(vector<vector<char> > v);
  * @param v - the vector containing the data from the file
  */
 void print2dVector(vector<vector<char> > v);
+vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found);
 
 int main()
 {
@@ -56,7 +58,15 @@ int main()
     // read data from files
     data1 = readData("level1.txt");
     data2 = readData("level2.txt");
-    char guess = ' ';
+    char guess;
+    // vector i will be using
+    vector<vector<char> > data2_copy = readData("level2.txt");
+    vector<vector<char> > GUS;
+    // variables for the game 
+int total_Guess = 5;
+int found = -1;
+
+
 
     // print data from files
     cout << "Before replace\n";
@@ -74,9 +84,28 @@ int main()
     cout << "\nAfter replace using method 2 or replace2\n";
     data2 = replace2(data2);
     print2dVector(data2);
+    cout
+        << "\ndata 2 update\n";
 
+    do
+    {
+        cout << "enter a Letter:" << endl;
+        cin >> guess;
+
+        GUS = GUESS(data2, guess, data2_copy,found);
+        //checking if char is not found
+        if(found == -1){
+            total_Guess--;
+        }
+        cout<<"remaining incorrect guess: "<<total_Guess<<endl;
+        print2dVector(GUS);
+        //reset the value found
+        found= -1;
+    } while (total_Guess >0);
     
 
+        
+    
 
     return 0;
 }
@@ -152,10 +181,16 @@ vector<vector<char> > replace2(vector<vector<char> > v)
         {
             //! checkpoint: same with above
             // so if it is letter -> we will replace it with _
-             if (isalpha(v[i][j]))
+            if (v[i][j] == 'O')
+            {
+                cout << "found" << endl;
+            }
+
+            if (isalpha(v[i][j]))
             {
                 v[i][j] = '_';
             }
+
             //! again, the code will need be change little bit to work -> hint: i (row) and j (col)
         }
     }
@@ -163,7 +198,7 @@ vector<vector<char> > replace2(vector<vector<char> > v)
     // return 2d vector
     return v;
 }
-vector<vector<char> > GUESS(vector<vector<char> > v)
+vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found)
 {
     // we already has data for v -> no need to read again
     // so just need nested loop to replace those char that not ! and - with _
@@ -173,10 +208,14 @@ vector<vector<char> > GUESS(vector<vector<char> > v)
         {
             //! checkpoint: same with above
             // so if it is letter -> we will replace it with _
-             if (isalpha(v[i][j]))
+            if (KEY[i][j] == toupper(charTo_Find))
+            //turns it to upper case 
             {
-                v[i][j] = '_';
+                cout << "found" << endl;
+                v[i][j] = KEY[i][j];
+                found++;
             }
+
             //! again, the code will need be change little bit to work -> hint: i (row) and j (col)
         }
     }
