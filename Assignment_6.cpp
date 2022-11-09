@@ -47,65 +47,91 @@ vector<vector<char> > replace2(vector<vector<char> > v);
  * @param v - the vector containing the data from the file
  */
 void print2dVector(vector<vector<char> > v);
-vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found);
+// function for guessing
+vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used);
+// getting user input
+double getInput(string prompt, vector<char> &used_Char);
+
+// checking for user error
+bool checkFailure(char input, vector<char> used_Char);
+// game over
+bool GamOver(vector<vector<char> > v, vector<vector<char> > KEY);
+
+bool openFile(string promt,vector<vector<char> > &Data);
 
 int main()
 {
+//printing the logo
+cout<<"     Welcome to\n";
+cout<<"         W\n"<<"     C R O S S\n"
+<<"         R\n"<<"         D\n";
+cout<<endl;
+//
     // make 2d vector for data from files
     vector<vector<char> > data1; // use just nested loop and if
     vector<vector<char> > data2; // use nested loop and isAlpha()
-
+    
     // read data from files
-    data1 = readData("level1.txt");
-    data2 = readData("level2.txt");
+    //data1 = readData("level1.txt");
+
     char guess;
     // vector i will be using
     vector<vector<char> > data2_copy = readData("level2.txt");
     vector<vector<char> > GUS;
-    // variables for the game 
-int total_Guess = 5;
-int found = -1;
+    // storing used characters
+    vector<char> used_char;
+    // variables for the game
+    int total_Guess = 5;
+    int found = 0;
+    string promt = "enter a Letter: ";
+    
+    bool is_used = false;
+    bool valid = false;
+
+    string Intro_promt ="Enter level to play:";
+   
 
 
 
-    // print data from files
-    cout << "Before replace\n";
-    print2dVector(data1);
-    cout << '\n';
-    print2dVector(data2);
-
-    cout << "------------------------------------------------------------\n";
-
-    cout
-        << "\nAfter replace using method 1 or replace1\n";
-    data1 = replace1(data1);
-    print2dVector(data1);
-
-    cout << "\nAfter replace using method 2 or replace2\n";
-    data2 = replace2(data2);
-    print2dVector(data2);
-    cout
-        << "\ndata 2 update\n";
-
+while (openFile(Intro_promt,data2) == false)
+{
+    if(cin.fail()){
+        cin.clear();
+        cin.ignore(1000, '\n');
+        
+        continue;
+    }
+   openFile(Intro_promt, data2);
+}
+data2 = replace2(data2);
     do
     {
-        cout << "enter a Letter:" << endl;
-        cin >> guess;
+        guess = getInput(promt, used_char);
 
-        GUS = GUESS(data2, guess, data2_copy,found);
-        //checking if char is not found
-        if(found == -1){
+        GUS = GUESS(data2, guess, data2_copy, found, used_char, is_used);
+        // checking if char is not found
+        if (found == -1)
+        {
+            cout << "The letter is not on the board \n";
             total_Guess--;
         }
-        cout<<"remaining incorrect guess: "<<total_Guess<<endl;
+        cout << "remaining incorrect guess: " << total_Guess << endl;
         print2dVector(GUS);
-        //reset the value found
-        found= -1;
-    } while (total_Guess >0);
-    
+        // reset the value found
+        cout << found << endl;
+        found = -1;
 
-        
-    
+        for (char i : used_char)
+        {
+            cout << i << ' ';
+        }
+        if (GamOver(data2, data2_copy) == true)
+        {
+            break;
+        }
+        cout << endl;
+
+    } while (total_Guess > 0 || is_used == true);
 
     return 0;
 }
@@ -181,10 +207,6 @@ vector<vector<char> > replace2(vector<vector<char> > v)
         {
             //! checkpoint: same with above
             // so if it is letter -> we will replace it with _
-            if (v[i][j] == 'O')
-            {
-                cout << "found" << endl;
-            }
 
             if (isalpha(v[i][j]))
             {
@@ -198,22 +220,35 @@ vector<vector<char> > replace2(vector<vector<char> > v)
     // return 2d vector
     return v;
 }
-vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found)
+vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used)
 {
     // we already has data for v -> no need to read again
     // so just need nested loop to replace those char that not ! and - with _
     for (int i = 0; i < v.size(); i++) // loop rows
     {
+
+        is_used = false;
         for (int j = 0; j < v[i].size(); j++) // loop cols
         {
             //! checkpoint: same with above
+
             // so if it is letter -> we will replace it with _
             if (KEY[i][j] == toupper(charTo_Find))
-            //turns it to upper case 
+            // turns it to upper case
             {
+                // checking if letter is already used.
+                if (v[i][j] == KEY[i][j])
+                {
+                    cout << "letter is already used" << endl;
+                    is_used = true;
+                    found++;
+                    break;
+                }
                 cout << "found" << endl;
                 v[i][j] = KEY[i][j];
                 found++;
+
+                used.push_back(v[i][j]);
             }
 
             //! again, the code will need be change little bit to work -> hint: i (row) and j (col)
@@ -234,8 +269,85 @@ void print2dVector(vector<vector<char> > v)
     {
         for (int j = 0; j < v[i].size(); j++) // this will loop through each column
         {
-            cout << v[i][j] << " ";
+            cout << v[i][j];
         }
         cout << endl;
     }
+}
+
+// getting user input
+double getInput(string prompt, vector<char> &used)
+{
+    char input = ' ';
+
+    cout << prompt << endl
+         << "**";
+    
+    cin >> input;
+    
+    cout << endl;
+
+    while (checkFailure(input, used) == false)
+    {
+        cout << prompt << endl
+             << "**";
+        cin >> input;
+        cout << endl;
+    }
+
+    // printing radius
+
+    return input;
+}
+
+// error checking
+bool checkFailure(char input, vector<char> used_char)
+{
+
+    if (cin.fail())
+    {
+        cout << "Error: Invalid radius!" << endl;
+        cin.clear();
+        cin.ignore(1000, '\n');
+
+        // returns false if the input is not valid
+        return false;
+    }
+
+    // returns true if the input is valid
+    return true;
+}
+// winner
+bool GamOver(vector<vector<char> > v, vector<vector<char> > KEY)
+{
+
+    if (KEY == v)
+    {
+        cout << "GamOver " << endl;
+        return true;
+    }
+    return false;
+}
+//checking for invalid file.
+bool openFile(string promt,vector<vector<char> > &Data){
+int option = 0;
+cout<<promt;
+cin>>option;
+
+if(option == 1){
+    Data = readData("level1.txt");
+    return true;
+} else if(option == 2){
+    Data = readData("level2.txt");
+    return true;
+} 
+else if (option> 2){
+    cout<<"Level files could not be found!\n";
+    return false;
+}
+else if (option < 1){
+   cout<<"Invalid Entry!\n";
+}
+return false;
+
 }
