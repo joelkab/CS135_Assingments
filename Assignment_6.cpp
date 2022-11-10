@@ -50,10 +50,11 @@ void print2dVector(vector<vector<char> > v);
 // function for guessing
 vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used);
 // getting user input
-double getInput(string prompt, vector<char> &used_Char);
+
+double getInput(string prompt);
 
 // checking for user error
-bool checkFailure(char input, vector<char> used_Char);
+bool checkFailure(char input);
 // game over
 bool GamOver(vector<vector<char> > v, vector<vector<char> > KEY);
 
@@ -105,7 +106,7 @@ while (openFile(Intro_promt,data2,data2_copy) == false)
 data2 = replace2(data2);
     do
     {
-        guess = getInput(promt, used_char);
+        guess = getInput(promt);
 
         GUS = GUESS(data2, guess, data2_copy, found, used_char, is_used);
         // checking if char is not found
@@ -128,7 +129,7 @@ data2 = replace2(data2);
         }
         if (GamOver(data2, data2_copy) == true)
         {
-            break;
+            return 0;
         }
         cout << endl;
 
@@ -265,33 +266,7 @@ void print2dVector(vector<vector<char> > v)
     }
 }
 
-// getting user input
-double getInput(string prompt, vector<char> &used)
-{
-    char input = ' ';
-
-    cout << prompt;
-         
-    
-    cin >> input;
-    
-    cout << endl;
-
-    while (checkFailure(input, used) == false)
-    {
-        cout << prompt << endl
-             << "**";
-        cin >> input;
-        cout << endl;
-    }
-
-    // printing radius
-
-    return input;
-}
-
-// error checking
-bool checkFailure(char input, vector<char> used_char)
+bool checkFailure(char input)
 {
 
     if (cin.fail())
@@ -307,6 +282,30 @@ bool checkFailure(char input, vector<char> used_char)
     // returns true if the input is valid
     return true;
 }
+
+// getting user input
+double getInput(string prompt)
+{
+    char input = ' ';
+    cout << prompt;
+    cin >> input;
+    
+    cout << endl;
+//checking if inout is a number // 0 means it is number 
+    while ( isalpha(input) == 0)
+    {
+        cout<<"error\n";
+        cout << prompt << endl;
+        cin >> input;
+        cout << endl;
+        continue;
+    }
+
+    return input;
+}
+
+// error checking
+
 // winner
 bool GamOver(vector<vector<char> > v, vector<vector<char> > KEY)
 {
