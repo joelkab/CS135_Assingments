@@ -49,6 +49,7 @@ int main()
 }
 
 
+
 // start of the functions
 
 // getdouble
