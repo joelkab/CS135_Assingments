@@ -57,7 +57,7 @@ bool checkFailure(char input, vector<char> used_Char);
 // game over
 bool GamOver(vector<vector<char> > v, vector<vector<char> > KEY);
 
-bool openFile(string promt,vector<vector<char> > &Data);
+bool openFile(string promt,vector<vector<char> > &Data,vector<vector<char> > &data2);
 
 int main()
 {
@@ -76,7 +76,7 @@ cout<<endl;
 
     char guess;
     // vector i will be using
-    vector<vector<char> > data2_copy = readData("level2.txt");
+    vector<vector<char> > data2_copy;
     vector<vector<char> > GUS;
     // storing used characters
     vector<char> used_char;
@@ -93,15 +93,14 @@ cout<<endl;
 
 
 
-while (openFile(Intro_promt,data2) == false)
+while (openFile(Intro_promt,data2,data2_copy) == false)
 {
     if(cin.fail()){
         cin.clear();
         cin.ignore(1000, '\n');
-        
         continue;
     }
-   openFile(Intro_promt, data2);
+  
 }
 data2 = replace2(data2);
     do
@@ -116,7 +115,9 @@ data2 = replace2(data2);
             total_Guess--;
         }
         cout << "remaining incorrect guess: " << total_Guess << endl;
+
         print2dVector(GUS);
+        
         // reset the value found
         cout << found << endl;
         found = -1;
@@ -132,6 +133,7 @@ data2 = replace2(data2);
         cout << endl;
 
     } while (total_Guess > 0 || is_used == true);
+    cout<<"Better luck next time!\n";
 
     return 0;
 }
@@ -168,27 +170,17 @@ vector<vector<char> > readData(string fileName)
     return board;
 }
 
-// using nested for loops and isAlpha()
+
 vector<vector<char> > replace1(vector<vector<char> > v)
 {
-    // we already has data for v -> no need to read again
-    // so just need nested loop to replace those char that not ! and - with _ with help from isAlpha()
     for (int i = 0; i < v.size(); i++) // loop rows
     {
         for (int j = 0; j < v[i].size(); j++) // loop cols
         {
-            //! checkpoint: read and make sure you understand this part/how it works
-            //!  understand the point of 1st and 2nd for loop and why it there
-            // so if it is letter -> we will replace it with _
-            // reference to c++ library: https://www.cplusplus.com/reference/cctype/isalpha/ for more info
-
             if (isalpha(v[i][j])) // isalpha() is a function that check if the char is a letter
             {
                 v[i][j] = '_';
             }
-
-            //! again, the code will need be change little bit to work -> hint: i (row) and j (col)
-            //! line 124->127 will need to be change
         }
     }
 
@@ -262,9 +254,7 @@ vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<v
 // print 2d vector
 void print2dVector(vector<vector<char> > v)
 {
-    //! this will give hints to help replace1 & 2 function
-    //! this is in the book (the free one) -> 307-310. Please read it to understand how it works
-    // print 2d vector
+    
     for (int i = 0; i < v.size(); i++) // this will loop through each row
     {
         for (int j = 0; j < v[i].size(); j++) // this will loop through each column
@@ -280,8 +270,8 @@ double getInput(string prompt, vector<char> &used)
 {
     char input = ' ';
 
-    cout << prompt << endl
-         << "**";
+    cout << prompt;
+         
     
     cin >> input;
     
@@ -323,22 +313,37 @@ bool GamOver(vector<vector<char> > v, vector<vector<char> > KEY)
 
     if (KEY == v)
     {
-        cout << "GamOver " << endl;
+        cout << "GamOver you win " << endl;
         return true;
     }
     return false;
 }
 //checking for invalid file.
-bool openFile(string promt,vector<vector<char> > &Data){
+bool openFile(string promt,vector<vector<char> > &Data,vector<vector<char> > &data2){
 int option = 0;
 cout<<promt;
 cin>>option;
 
 if(option == 1){
+
     Data = readData("level1.txt");
+    data2 = readData("level1.txt");
+   
+    Data = replace1(Data);
+     
     return true;
 } else if(option == 2){
     Data = readData("level2.txt");
+   data2 = readData("level2.txt");
+   
+    Data = replace1(Data);
+    return true;
+} 
+else if(option == 3){
+    Data = readData("level3.txt");
+    data2 = readData("level3.txt");
+   
+    Data = replace1(Data);
     return true;
 } 
 else if (option> 2){
