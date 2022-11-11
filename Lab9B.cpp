@@ -10,6 +10,7 @@ Output:  prints out both numbers added and multiplied. aswell as combinng both n
 #include <string>
 #include <iomanip>
 #include <cstring>
+#include <sstream>
 using namespace std;
 // delcaring the functions
 // getting doubel inputs
@@ -23,15 +24,12 @@ int multiply(int, int);
 // int operator+(string s, int count);
 bool Str_checkFailure(string input);
 // main functions
-string operator*(string s, size_t count)
+string multiply(string repeat, int times)
 {
-    string ret;
-
-    for (size_t i = 0; i < count; ++i)
-    {
-        ret = ret + s;
-    }
-    return ret;
+    ostringstream rep;
+    for (int i = 0; i < times; i++)
+        rep << repeat;
+    return rep.str();
 }
 int main()
 {
@@ -52,8 +50,8 @@ int main()
     cout << input_1 << " + " << input_2 << " = " << add(input_1, input_2) << endl;
     cout << str_input1 << " + " << str_input2 << " = " << str_input1 + str_input2 << endl;
     cout << input_1 << " * " << input_2 << " = " << multiply(input_1, input_2) << endl;
-    cout << str_input1 << " * " << input_1 << " = " << str_input1 * input_1 << "\n";
-    cout << str_input2 << " * " << input_2 << " = " << str_input2 * input_2 << "\n";
+    cout << str_input1 << " * " << input_1 << " = " << multiply(str_input1, input_1) << "\n";
+    cout << str_input2 << " * " << input_2 << " = " << multiply(str_input2, input_2) << "\n";
     return 0;
 }
 
