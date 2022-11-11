@@ -48,17 +48,17 @@ vector<vector<char> > replace2(vector<vector<char> > v);
  */
 void print2dVector(vector<vector<char> > v);
 // function for guessing
-vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used);
+vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used,string &been_used);
 // getting user input
 
-double getInput(string prompt);
+double getInput(string prompt,vector<vector<char> > v, string been_used,vector<vector<char> > z);
 
 // checking for user error
-bool checkFailure(char input);
 // game over
 bool GamOver(vector<vector<char> > v, vector<vector<char> > KEY);
 
 bool openFile(string promt,vector<vector<char> > &Data,vector<vector<char> > &data2);
+bool BeenUsed (vector<vector<char> > v, string been_used,vector<vector<char> > z);
 
 int main()
 {
@@ -90,6 +90,7 @@ cout<<endl;
     bool valid = false;
 
     string Intro_promt ="Enter level to play:";
+    string been_used = " ";
    
 
 
@@ -106,9 +107,9 @@ while (openFile(Intro_promt,data2,data2_copy) == false)
 data2 = replace2(data2);
     do
     {
-        guess = getInput(promt);
+        guess = getInput(promt,data2,been_used, data2_copy);
 
-        GUS = GUESS(data2, guess, data2_copy, found, used_char, is_used);
+        GUS = GUESS(data2, guess, data2_copy, found, used_char, is_used,been_used);
         // checking if char is not found
         if (found == -1)
         {
@@ -123,10 +124,11 @@ data2 = replace2(data2);
         cout << found << endl;
         found = -1;
 
-        for (char i : used_char)
+        for (unsigned int i=0; i<been_used.size(); i++)
         {
-            cout << i << ' ';
+            cout << been_used[i] << " ";
         }
+
         if (GamOver(data2, data2_copy) == true)
         {
             return 0;
@@ -155,7 +157,7 @@ vector<vector<char> > readData(string fileName)
         while (getline(file, line)) // get line from file
         {
             vector<char> row;                       // we will store each line/row in a vector
-            for (int i = 0; i < line.length(); i++) // this will loop through each charatcer in the line
+            for (unsigned int i = 0; i < line.length(); i++) // this will loop through each charatcer in the line
             {
                 row.push_back(line[i]); // add each character to the row vector
             }
@@ -174,9 +176,9 @@ vector<vector<char> > readData(string fileName)
 
 vector<vector<char> > replace1(vector<vector<char> > v)
 {
-    for (int i = 0; i < v.size(); i++) // loop rows
+    for (unsigned int i = 0; i < v.size(); i++) // loop rows
     {
-        for (int j = 0; j < v[i].size(); j++) // loop cols
+        for (unsigned int j = 0; j < v[i].size(); j++) // loop cols
         {
             if (isalpha(v[i][j])) // isalpha() is a function that check if the char is a letter
             {
@@ -194,9 +196,9 @@ vector<vector<char> > replace2(vector<vector<char> > v)
 {
     // we already has data for v -> no need to read again
     // so just need nested loop to replace those char that not ! and - with _
-    for (int i = 0; i < v.size(); i++) // loop rows
+    for (unsigned int i = 0; i < v.size(); i++) // loop rows
     {
-        for (int j = 0; j < v[i].size(); j++) // loop cols
+        for (unsigned int j = 0; j < v[i].size(); j++) // loop cols
         {
             //! checkpoint: same with above
             // so if it is letter -> we will replace it with _
@@ -213,15 +215,15 @@ vector<vector<char> > replace2(vector<vector<char> > v)
     // return 2d vector
     return v;
 }
-vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used)
+vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used, string &been_used)
 {
     // we already has data for v -> no need to read again
     // so just need nested loop to replace those char that not ! and - with _
-    for (int i = 0; i < v.size(); i++) // loop rows
+    for (unsigned int i = 0; i < v.size(); i++) // loop rows
     {
 
         is_used = false;
-        for (int j = 0; j < v[i].size(); j++) // loop cols
+        for (unsigned int j = 0; j < v[i].size(); j++) // loop cols
         {
             //! checkpoint: same with above
 
@@ -232,7 +234,7 @@ vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<v
                 // checking if letter is already used.
                 if (v[i][j] == KEY[i][j])
                 {
-                    cout << "letter is already used" << endl;
+                    //cout << "letter is already used" << endl;
                     is_used = true;
                     found++;
                     break;
@@ -241,7 +243,8 @@ vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<v
                 v[i][j] = KEY[i][j];
                 found++;
 
-                used.push_back(v[i][j]);
+               used.push_back(v[i][j]);
+               been_used += v[i][j];
             }
 
             //! again, the code will need be change little bit to work -> hint: i (row) and j (col)
@@ -256,9 +259,9 @@ vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<v
 void print2dVector(vector<vector<char> > v)
 {
     
-    for (int i = 0; i < v.size(); i++) // this will loop through each row
+    for (unsigned int i = 0; i < v.size(); i++) // this will loop through each row
     {
-        for (int j = 0; j < v[i].size(); j++) // this will loop through each column
+        for (unsigned int j = 0; j < v[i].size(); j++) // this will loop through each column
         {
             cout << v[i][j];
         }
@@ -266,25 +269,8 @@ void print2dVector(vector<vector<char> > v)
     }
 }
 
-bool checkFailure(char input)
-{
-
-    if (cin.fail())
-    {
-        cout << "Error: Invalid radius!" << endl;
-        cin.clear();
-        cin.ignore(1000, '\n');
-
-        // returns false if the input is not valid
-        return false;
-    }
-
-    // returns true if the input is valid
-    return true;
-}
-
 // getting user input
-double getInput(string prompt)
+double getInput(string prompt,vector<vector<char> > v, string been_used,vector<vector<char> > z)
 {
     char input = ' ';
     cout << prompt;
@@ -292,7 +278,7 @@ double getInput(string prompt)
     
     cout << endl;
 //checking if inout is a number // 0 means it is number 
-    while ( isalpha(input) == 0)
+    while ( isalpha(input) == 0 || BeenUsed(v,been_used,z))
     {
         cout<<"error\n";
         cout << prompt << endl;
@@ -303,6 +289,27 @@ double getInput(string prompt)
 
     return input;
 }
+
+
+//checking if a letter has been used 
+bool BeenUsed (vector<vector<char> > v, string been_used,vector<vector<char> > z){
+
+for (unsigned int i = 0; i < v.size(); i++) // this will loop through each row
+    {
+        for (unsigned int j = 0; j < v[i].size(); j++) // this will loop through each column
+        {
+            if(been_used[i]== v[i][j]){
+                cout<<"been used\n";
+                return false;
+            }
+        }
+       
+    }
+
+    return true;
+}
+
+
 
 // error checking
 
@@ -356,3 +363,5 @@ else if (option < 1){
 return false;
 
 }
+
+//work on checking if a character has been used.
