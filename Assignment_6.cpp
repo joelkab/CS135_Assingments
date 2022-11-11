@@ -48,10 +48,10 @@ vector<vector<char> > replace2(vector<vector<char> > v);
  */
 void print2dVector(vector<vector<char> > v);
 // function for guessing
-vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used,string &been_used);
+vector<vector<char> > GUESS(vector<vector<char> > &v, string charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used,string &been_used);
 // getting user input
 
-double getInput(string prompt,vector<vector<char> > v, string been_used,vector<vector<char> > z);
+string getInput(string prompt,vector<vector<char> > v, string been_used,vector<vector<char> > z);
 
 // checking for user error
 // game over
@@ -75,7 +75,7 @@ cout<<endl;
     // read data from files
     //data1 = readData("level1.txt");
 
-    char guess;
+    string guess;
     // vector i will be using
     vector<vector<char> > data2_copy;
     vector<vector<char> > GUS;
@@ -215,7 +215,7 @@ vector<vector<char> > replace2(vector<vector<char> > v)
     // return 2d vector
     return v;
 }
-vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used, string &been_used)
+vector<vector<char> > GUESS(vector<vector<char> > &v, string charTo_Find, vector<vector<char> > KEY, int &found, vector<char> &used, bool &is_used, string &been_used)
 {
     // we already has data for v -> no need to read again
     // so just need nested loop to replace those char that not ! and - with _
@@ -228,7 +228,7 @@ vector<vector<char> > GUESS(vector<vector<char> > &v, char charTo_Find, vector<v
             //! checkpoint: same with above
 
             // so if it is letter -> we will replace it with _
-            if (KEY[i][j] == toupper(charTo_Find))
+            if (KEY[i][j] == toupper(charTo_Find[0]))
             // turns it to upper case
             {
                 // checking if letter is already used.
@@ -270,15 +270,15 @@ void print2dVector(vector<vector<char> > v)
 }
 
 // getting user input
-double getInput(string prompt,vector<vector<char> > v, string been_used,vector<vector<char> > z)
+string getInput(string prompt,vector<vector<char> > v, string been_used,vector<vector<char> > z)
 {
-    char input = ' ';
+    string input = " ";
     cout << prompt;
     cin >> input;
     
     cout << endl;
 //checking if inout is a number // 0 means it is number 
-    while ( isalpha(input) == 0 || BeenUsed(v,been_used,z))
+    while ( cin.fail())
     {
         cout<<"error\n";
         cout << prompt << endl;
