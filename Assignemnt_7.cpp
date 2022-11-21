@@ -2,8 +2,10 @@
 #include <iomanip>
 #include <fstream>
 #include <vector>
+#include <sstream>
 #include <stdio.h>
 #include <algorithm>
+#include <cstdlib>
 using namespace std;
 const string USER = "meowmin";
 const string PASS = "1w@ntch1cken";
@@ -40,13 +42,14 @@ void header();
 string toLower(string);
 void getCredentials(int, char const *[], string &, string &);
 bool validateCredentials(string, string);
-//creating commandloop
+// creating commandloop
 void commandLoop();
-//Getting input
-vector<string> getInput ();
+// Getting input
+vector<string> getInput();
 string validateArguments(vector<string> args);
 void executeCommand(vector<string> args);
 
+int countWords(string str);
 
 // sections 2/3 add function prototypes
 // YOUR CODE HERE
@@ -54,13 +57,11 @@ int main(int argc, char const *argv[])
 {
     if (argc < 3)
     {
-        cout<<USAGE_MSG;
+        cout << USAGE_MSG;
         return 0;
     }
     string user = "", pass = "";
     getCredentials(argc, argv, user, pass);
-
-    
 
     if (validateCredentials(user, pass) == true)
     {
@@ -80,14 +81,14 @@ int main(int argc, char const *argv[])
 void header()
 {
     cout << "+---------------------------------------------------------------------+\n"
-         << "|   __   __  _______  _______  _     _    _______  _______  ___  | \n "
-         << " |  |  |_|  ||       ||       || | _ | |  |       ||       ||   |   | \n "
-         << "|  |       ||    ___||   _   || || || |  |  _____||   _   ||   |  | \n "
-         << "|  |       ||   |___ |  | |  ||       |  | |_____ |  | |  ||   |  | \n "
-         << "|  |       ||    ___||  |_|  ||       |  |_____  ||  |_|  ||   | ___ | \n "
-         << "|  | ||_|| ||   |___ |       ||   _   |   _____| ||      | |      | |\n "
-         << "|  |_|   |_||_______||_______||__| |__|  |_______||____||_|| _______ || \n "
-         << " | v1 .0.0 | \n "
+         << "|   __   __  _______  _______  _     _    _______  _______  ___        | \n "
+         << "|  |  |_|  ||       ||       || | _ | |  |       ||       ||   |       | \n "
+         << "|  |       ||    ___||   _   || || || |  |  _____||   _   ||   |       | \n "
+         << "|  |       ||   |___ |  | |  ||       |  | |_____ |  | |  ||   |       | \n "
+         << "|  |       ||    ___||  |_|  ||       |  |_____  ||  |_|  ||   | _ __   | \n "
+         << "|  | ||_|| ||   |___ |       ||   _   |   _____| ||      | |         |   |\n "
+         << "|  |_|   |_||_______||_______||__| |__|  |_______||____||_|| _______ | | \n "
+         << "|                                                                    v1 .0.0 | \n "
          << " + -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -+\n ";
 }
 // Used for section 2
@@ -176,7 +177,6 @@ bool printTable(string file)
     return false;
 }
 
-
 // Fill this function out for section 1.1
 void getCredentials(int argc, char const *argv[], string &user, string &pass)
 {
@@ -184,7 +184,8 @@ void getCredentials(int argc, char const *argv[], string &user, string &pass)
     user = argv[1];
     pass = argv[2];
 
-    for (int i = 0; i < argc; ++i) {
+    for (int i = 0; i < argc; ++i)
+    {
         cout << argv[i] << "\n";
     }
     // 1.1 get username and password from cmd args
@@ -198,63 +199,90 @@ bool validateCredentials(string u, string p)
 
     if (u == USER && p == PASS)
     {
-        
-        cout<< WELCOME_MSG << " " << u <<endl;
+
+        cout << WELCOME_MSG << " " << u << endl;
         return true;
     }
-    else {
-        cout<< INVALID_CREDENTIALS_MSG;
+    else
+    {
+        cout << INVALID_CREDENTIALS_MSG;
         return false;
     }
-
-    
 }
 
 // 2.1 add getInput() function
-vector<string> getInput (){
-
-    string input =" ";
+vector<string> getInput()
+{
     vector<string> Vec_Getinputs;
-    cout<<COMMAND_PROMPT;
-    cin>> input;
+
+    string input = " ";
+    input = toLower(input);
+
+    cout << COMMAND_PROMPT;
+    cin >> input;
 
     Vec_Getinputs.push_back(input);
 
-    
-
-return Vec_Getinputs;
+    return Vec_Getinputs;
 }
 // 2.1 add validateArguments(vector<string>) function
-string validateArguments(vector<string> args){
+string validateArguments(vector<string> args)
+{
+    string input = " ";
 
-string input = " ";
-for(int i = 0; i<args.size(); i++){
-        cout<<i<<" "<<args[i];
+    for (int i = 0; i < args.size(); i++)
+    {
+        cout << i << " " << args[i];
+        input += args[i];
+        // checking to see it quite is typed in
+        if (args[i] == QUIT_CMD)
+        {
+            exit(0);
+        }
+    }
+    if (args.size() >1)
+    {
+        cout << "ewowoowowowow";
     }
 
-return input;
-
+    return input;
 }
 // 2.1 add executeCommand(vector<string>) function
-void executeCommand(vector<string> args){
-
-for(int i = 0; i<args.size(); i++){
-        cout<<i<<" "<<args[i];
-    }
-
+void executeCommand(vector<string> args)
+{
 }
 // 2.1 add commandLoop() function
-void commandLoop(){
+void commandLoop()
+{
 
     vector<string> input;
-    input = getInput();
+    while (bool statues = true)
+    {
 
-    
+        input = getInput();
+        string valid = validateArguments(input);
+        executeCommand(input);
+        if (valid == QUIT_CMD)
+        {
+            statues = false;
+        }
+    }
+}
+int countWords(string str)
+{
+    // Breaking input into word
+    // using string stream
 
+    // Used for breaking words
+    stringstream s(str);
 
+    // To store individual words
+    string word;
 
-
-
+    int count = 0;
+    while (s >> word)
+        count++;
+    return count;
 }
 /*
 DO NOT REMOVE
