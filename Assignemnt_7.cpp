@@ -48,7 +48,7 @@ void commandLoop();
 vector<string> getInput();
 string validateArguments(vector<string> args);
 void executeCommand(vector<string> args);
-
+int removeDupWord(string str);
 int countWords(string str);
 
 // sections 2/3 add function prototypes
@@ -213,17 +213,41 @@ bool validateCredentials(string u, string p)
 // 2.1 add getInput() function
 vector<string> getInput()
 {
+    
     vector<string> Vec_Getinputs;
 
     string input = " ";
-    input = toLower(input);
 
     cout << COMMAND_PROMPT;
     cin >> input;
 
-    Vec_Getinputs.push_back(input);
+if(removeDupWord(input) >1){
+    cout<<"too many inout";
+}
+
 
     return Vec_Getinputs;
+}
+
+int removeDupWord(string str)
+{
+    int count;
+    string word = "";
+    for (auto x : str)
+    {
+        if (x == ' ')
+        {
+            cout << word << endl;
+            count ++;
+            word = "";
+        }
+        else {
+            word = word + x;
+        }
+    }
+    cout << word << endl;
+    cout << count << endl;
+    return count;
 }
 // 2.1 add validateArguments(vector<string>) function
 string validateArguments(vector<string> args)
@@ -234,17 +258,18 @@ string validateArguments(vector<string> args)
     {
         cout << i << " " << args[i];
         input += args[i];
+
         // checking to see it quite is typed in
         if (args[i] == QUIT_CMD)
         {
             exit(0);
         }
-    }
-    if (args.size() >1)
-    {
-        cout << "ewowoowowowow";
-    }
 
+        if (args[i] == " ")
+        {
+            cout << "ewowoowowowow";
+        }
+    }
     return input;
 }
 // 2.1 add executeCommand(vector<string>) function
