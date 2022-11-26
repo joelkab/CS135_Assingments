@@ -35,6 +35,7 @@ int main()
 
     openFile(fileReader, prompt);
     readFile(fileReader, PurType);
+    printPurchaseData(PurType,size);
 }
 
 void openFile(ifstream &fileReader, string prompt)
@@ -58,7 +59,6 @@ void openFile(ifstream &fileReader, string prompt)
 }
 void readFile(ifstream &fileReader, PurchaseType purchases[])
 {
-    int size = 10;
     int comma_location = 0;
     string line = "";
     int cnt = 0;
@@ -70,7 +70,7 @@ void readFile(ifstream &fileReader, PurchaseType purchases[])
         line = line.substr(comma_location + 1, line.length());
 
         comma_location = line.find(',');
-       purchases[cnt].productName = line.substr(0, comma_location);
+        purchases[cnt].productName = line.substr(0, comma_location);
         line = line.substr(comma_location + 1, line.length());
 
         comma_location = line.find(',');
@@ -81,19 +81,40 @@ void readFile(ifstream &fileReader, PurchaseType purchases[])
         purchases[cnt].qtyPurchased = stoi(line.substr(0, comma_location));
         line = line.substr(comma_location + 1, line.length());
 
-        comma_location = line.find(',');
-        purchases[cnt].taxRate = stod(line.substr(0, comma_location));
-        line = line.substr(comma_location + 1, line.length());
+        purchases[cnt].taxRate = stod(line);
+        
         cnt++;
     }
+    
 
-    for (int i = 0; i < cnt; i++)
+}
+void printPurchaseData(PurchaseType purchases[], int size){
+ double total = 0.0;
+int unique_cus = 0;
+//10 is cnt i would pass by reference cnt but its too much code.
+
+cout<<"+-------------+--------------+-------+----------+----------+-------+\n"
+<<"| Customer ID | Product Name | Price | Quantity | Tax Rate | Total |\n"
+<<"+-------------+--------------+-------+----------+----------+-------+\n";
+    for (int i = 0; i < 10; i++)
     {
-        cout << left
-             << setw(2) << purchases[i].customerID << " "
-             << setw(2) << purchases[i].productName << " "
-             << setw(2) << purchases[i].price << " "
-             << setw(2) << purchases[i].qtyPurchased << " "
-             << purchases[i].taxRate << endl;
+        if (purchases[i].customerID != purchases[i + 1].customerID)
+        {
+            unique_cus++;
+        }
+
+        double totaltax = purchases[i].price * purchases[i].qtyPurchased * (purchases[i].taxRate + 1);
+        cout << fixed<<setprecision(2)<<left
+            << "|     "<< purchases[i].customerID << " "
+             <<"|"<<right<<setfill(' ')<<setw(13)<< purchases[i].productName << " "
+             <<"|"<<right<<setfill(' ')<<setw(6)<< purchases[i].price << " "
+             << "|        "<< purchases[i].qtyPurchased << " "
+             <<"|"<<right<<setfill(' ')<<setw(9)<<purchases[i].taxRate * 100<< " "
+             <<"|"<<right<<setfill(' ')<<setw(9)<<totaltax << endl;
+
+        total += purchases[i].price * purchases[i].qtyPurchased * (purchases[i].taxRate + 1) / 10;
     }
+
+    cout << fixed << setprecision(2) << "total :" << total << endl;
+    cout << "Unique users:  " << unique_cus;
 }
