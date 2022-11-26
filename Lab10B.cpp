@@ -26,9 +26,10 @@ void openFile(ifstream &, string);
 void readFile(ifstream &, PurchaseType[]);
 void printPurchaseData(PurchaseType[], int);
 
+const int size = 10;
 int main()
 {
-    int size = 10;
+   
     PurchaseType PurType[size];
     ifstream fileReader;
     string prompt = "Enter file name";
@@ -49,10 +50,11 @@ void openFile(ifstream &fileReader, string prompt)
     fileReader.open(filename);
     while (!fileReader.is_open())
     {
-        cout << "Error: Invalid file name" << endl;
+        cout << "Error: Invalid file" << endl;
         fileReader.clear();
         cout << "Enter file name" << endl
              << "**";
+             cout<<endl;
         getline(cin, filename);
         fileReader.open(filename);
     }
@@ -93,9 +95,9 @@ void printPurchaseData(PurchaseType purchases[], int size){
 int unique_cus = 0;
 //10 is cnt i would pass by reference cnt but its too much code.
 
-cout<<"+-------------+--------------+-------+----------+----------+-------+\n"
-<<"| Customer ID | Product Name | Price | Quantity | Tax Rate | Total |\n"
-<<"+-------------+--------------+-------+----------+----------+-------+\n";
+cout<<"+-------------+--------------+-------+----------+----------+--------+\n"
+<<"| Customer ID | Product Name | Price | Quantity | Tax Rate | Total  |\n"
+<<"+-------------+--------------+-------+----------+----------+--------+\n";
     for (int i = 0; i < 10; i++)
     {
         if (purchases[i].customerID != purchases[i + 1].customerID)
@@ -110,11 +112,15 @@ cout<<"+-------------+--------------+-------+----------+----------+-------+\n"
              <<"|"<<right<<setfill(' ')<<setw(6)<< purchases[i].price << " "
              << "|        "<< purchases[i].qtyPurchased << " "
              <<"|"<<right<<setfill(' ')<<setw(9)<<purchases[i].taxRate * 100<< " "
-             <<"|"<<right<<setfill(' ')<<setw(9)<<totaltax << endl;
+             <<"|"<<right<<setfill(' ')<<setw(7)<<totaltax << " |"<<endl;
+            
 
         total += purchases[i].price * purchases[i].qtyPurchased * (purchases[i].taxRate + 1) / 10;
     }
+cout <<"+-------------+--------------+-------+----------+----------+--------+\n";
 
-    cout << fixed << setprecision(2) << "total :" << total << endl;
-    cout << "Unique users:  " << unique_cus;
+
+cout << "Unique users:  "<<unique_cus<<endl;
+cout << fixed << setprecision(2) << "average total: " << total ;
+    
 }
