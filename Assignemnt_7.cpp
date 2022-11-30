@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <algorithm>
 #include <cstdlib>
+#include <ctype.h>
+#include <stdio.h>
 using namespace std;
 const string USER = "meowmin";
 const string PASS = "1w@ntch1cken";
@@ -40,7 +42,7 @@ const string DELETE_UNDELETABLE_MSG = "DELETE Error: table cannot be deleted";
 const string DELETE_INV_TABLE_NAME_MSG = "DELETE Error: invalid table name";
 void header();
 string toLower(string);
-void getCredentials(int, char const *[], string &, string &);
+void getCredentials(int argc, char const *argv[], string &user, string &pass);
 bool validateCredentials(string, string);
 // creating commandloop
 void commandLoop();
@@ -213,42 +215,23 @@ bool validateCredentials(string u, string p)
 // 2.1 add getInput() function
 vector<string> getInput()
 {
-    
+
     vector<string> Vec_Getinputs;
 
     string input = " ";
 
+    string token;
+
     cout << COMMAND_PROMPT;
-    cin >> input;
-
-if(removeDupWord(input) >1){
-    cout<<"too many inout";
-}
-
-
+    getline(cin, input);
+    istringstream ss(input);
+    while (getline(ss, token, ' '))
+    {
+        Vec_Getinputs.push_back(token);
+    }
     return Vec_Getinputs;
 }
 
-int removeDupWord(string str)
-{
-    int count;
-    string word = "";
-    for (auto x : str)
-    {
-        if (x == ' ')
-        {
-            cout << word << endl;
-            count ++;
-            word = "";
-        }
-        else {
-            word = word + x;
-        }
-    }
-    cout << word << endl;
-    cout << count << endl;
-    return count;
-}
 // 2.1 add validateArguments(vector<string>) function
 string validateArguments(vector<string> args)
 {
@@ -256,7 +239,8 @@ string validateArguments(vector<string> args)
 
     for (int i = 0; i < args.size(); i++)
     {
-        cout << i << " " << args[i];
+        cout << i <<args[i] << endl;
+
         input += args[i];
 
         // checking to see it quite is typed in
@@ -265,10 +249,12 @@ string validateArguments(vector<string> args)
             exit(0);
         }
 
-        if (args[i] == " ")
+        if (args[i] == CREATE_CMD && (args.size() < 3 || args.size() > 3))
         {
-            cout << "ewowoowowowow";
+            cout << "ewowoowowowow\n";
+            cin.clear();
         }
+        
     }
     return input;
 }
@@ -309,6 +295,7 @@ int countWords(string str)
         count++;
     return count;
 }
+
 /*
 DO NOT REMOVE
 Copyright 2022 Alex St. Aubin. All Rights Reserved.
