@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <algorithm>
 #include <cstdlib>
-#include <ctype.h>
 #include <stdio.h>
+#include <cctype>
 using namespace std;
 const string USER = "meowmin";
 const string PASS = "1w@ntch1cken";
@@ -51,7 +51,7 @@ vector<string> getInput();
 string validateArguments(vector<string> args);
 void executeCommand(vector<string> args);
 int removeDupWord(string str);
-int countWords(string str);
+bool is_only_alpha(const std::string &str);
 
 // sections 2/3 add function prototypes
 // YOUR CODE HERE
@@ -217,11 +217,12 @@ vector<string> getInput()
 {
 
     vector<string> Vec_Getinputs;
+    Vec_Getinputs.clear();
 
     string input = " ";
 
     string token;
-
+cout<<endl;
     cout << COMMAND_PROMPT;
     getline(cin, input);
     istringstream ss(input);
@@ -237,11 +238,15 @@ string validateArguments(vector<string> args)
 {
     string input = " ";
 
+ for (int i = 0; i < args.size(); i++)
+    {
+        input += args[i];
+    }
+
     for (int i = 0; i < args.size(); i++)
     {
         cout << i <<args[i] << endl;
 
-        input += args[i];
 
         // checking to see it quite is typed in
         if (args[i] == QUIT_CMD)
@@ -251,11 +256,30 @@ string validateArguments(vector<string> args)
 
         if (args[i] == CREATE_CMD && (args.size() < 3 || args.size() > 3))
         {
-            cout << "ewowoowowowow\n";
+            cout <<CREATE_ARG_CNT_MSG<<endl;
             cin.clear();
         }
+         if  (args[i] == CREATE_CMD && args.size() == 3)
+        {
+            cout<<"welcome u have 3 arguments \n";
+              if(is_only_alpha(input) == false) {
+                cout<<CREATE_INV_HEADERS_MSG<<endl;
+                return input;
+              }
+           // we know its a alphanumeric character
+
+           //check if the file already exist 
+
+           //if not create a new file open and write to that file.
+
+              
+        }
+        
+
         
     }
+
+    cout<<input;
     return input;
 }
 // 2.1 add executeCommand(vector<string>) function
@@ -279,22 +303,24 @@ void commandLoop()
         }
     }
 }
-int countWords(string str)
-{
-    // Breaking input into word
-    // using string stream
 
-    // Used for breaking words
-    stringstream s(str);
+ bool is_only_alpha(const std::string &str) {
+    
+    for (int i=1 ; i<str.size(); ++i) {
+        if (!isalnum(str[i])) {
+            
+            cout<<str[i]<<endl;
+            cout<<"noooooooooo "<< i<<endl;
+            
+            return false;
+            
+        }
+    }
+    return true;
+ }
 
-    // To store individual words
-    string word;
 
-    int count = 0;
-    while (s >> word)
-        count++;
-    return count;
-}
+
 
 /*
 DO NOT REMOVE
