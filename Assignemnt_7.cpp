@@ -53,6 +53,7 @@ void executeCommand(vector<string> args);
 int removeDupWord(string str);
 bool is_only_alpha(const string &str);
 bool is_file_exist(string fileName);
+void DeleteLine(string filename);
 
 // sections 2/3 add function prototypes
 // YOUR CODE HERE
@@ -274,7 +275,7 @@ string validateArguments(vector<string> args, bool &succes)
                 cout << DELETE_UNDELETABLE_MSG << endl;
                 return input;
             }
-            //checking to see if the file already exists
+            // checking to see if the file already exists
             if (is_file_exist(args[1]) == true)
             {
                 return VALID_ARG_MSG;
@@ -284,7 +285,6 @@ string validateArguments(vector<string> args, bool &succes)
                 cout << DELETE_INV_TABLE_NAME_MSG << endl;
                 return input;
             }
-            
         }
 
         //  checking to see if Show if typed in
@@ -355,12 +355,14 @@ string validateArguments(vector<string> args, bool &succes)
 // 2.1 add executeCommand(vector<string>) function
 void executeCommand(vector<string> args)
 {
-    ofstream oFile; // output file
-    ifstream iFile; // input file
-    string filename = args[1];
+
     // CREATE
     if (args[0] == CREATE_CMD)
     {
+        ofstream oFile; // output file
+        ifstream iFile; // input file
+        string filename = args[1];
+
         oFile.open(filename + TABLE_FILETYPE);
         if (!oFile.is_open())
         {
@@ -370,13 +372,11 @@ void executeCommand(vector<string> args)
         oFile.close();
 
         oFile.open("tables.csv", ios_base::app);
-        if (!oFile.is_open())
-        {
-            cout << "Error opening TABLES_TABLE file!\n";
-        }
-        oFile << args[1];
+
+        oFile << filename << endl;
         oFile.close();
-        cout << "table " << filename << TABLE_CREATE_SUCCESS_MSG;
+        cout << "table " << filename << TABLE_CREATE_SUCCESS_MSG << endl;
+        
     }
     // SHOW
     if (args[0] == SHOW_CMD)
@@ -388,10 +388,15 @@ void executeCommand(vector<string> args)
     if (args[0] == DELETE_CMD)
     {
         cout << "\nYour in delete\n";
+        string deleteline = args[1];
+        string filename = "tables.csv";
+        DeleteLine("tables.csv");
 
-        //delete the file name inside tables table
+        // DeleteLine(filename, deleteline, args);
 
-        //delete the file your tring the delete
+        // delete the file name inside tables table
+
+        // delete the file your tring the delete
     }
 }
 // 2.1 add commandLoop() function
@@ -400,6 +405,9 @@ void commandLoop()
 
     vector<string> input;
     bool sucess = false;
+
+
+
     while (bool statues = true)
     {
 
@@ -416,7 +424,6 @@ void commandLoop()
         }
         if (valid == VALID_ARG_MSG)
         {
-            cout << "hererre";
             executeCommand(input);
         }
     }
@@ -454,6 +461,64 @@ bool is_file_exist(string fileName)
         cout << "file doesn't exist\n";
         return false;
     }
+}
+
+void DeleteLine(string filename)
+{
+
+    int line_number;
+
+    // Prompt the user to enter the line number to delete in the file, store it
+    // into line_number
+
+    // fstream object will be used to read all of the existing lines in the file
+    fstream read_file;
+
+    // Open the file with the provided filename
+    read_file.open(filename);
+
+    // If file failed to open, exit with an error message and error exit status
+    if (read_file.fail())
+    {
+        cout << "Error opening file." << endl;
+    }
+
+    vector<string> lines;
+    string line;
+
+    // Read each line of the file and store it as the next element of the vector,
+    // the loop will stop when there are no more lines to read
+    while (getline(read_file, line))
+        lines.push_back(line);
+
+    // Close our access to the file since we are done reading with it
+    read_file.close();
+    for (int i = 0; i < lines.size(); i++)
+    {
+        cout << lines[i] << endl;
+    }
+
+    ofstream write_file;
+
+    // Open the file with the provided filename
+    write_file.open("copytable.csv");
+
+    // If the file failed to open, exit with an error message and exit status
+    if (write_file.fail())
+    {
+        cout << "Error opening file." << endl;
+    }
+
+    line_number--;
+
+    // Loop through the vector elements to write each line back to the file
+    // EXCEPT the line we want to delete.
+    for (int i = 0; i < lines.size(); i++)
+        if (lines[i] != "table")
+            write_file << lines[i] << endl;
+
+    // Close our access to the file since we are done working with it
+    write_file.close();
 }
 
 /*
