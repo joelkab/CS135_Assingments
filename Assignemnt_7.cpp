@@ -252,20 +252,41 @@ string validateArguments(vector<string> args, bool &succes)
     {
 
         input2 += args[i + 1];
-        // checking to see it quite is typed in
+        // QUIT
+        //  checking to see it quite is typed in
         if (args[i] == QUIT_CMD)
         {
             exit(0);
         }
+
+        // checking to see if Delete is typed n [
+        if (args[i] == DELETE_CMD && (args.size() < 2 || args.size() > 2))
+        {
+            cout << DELETE_ARG_CNT_MSG << endl;
+            cin.clear();
+        }
+        // DELETE
+        if (args[i] == DELETE_CMD && args.size() == 2)
+        {
+            cout << "you entered delete\n";
+            if (args[1] == SHOW_ARG_1)
+            {
+                cout << DELETE_UNDELETABLE_MSG << endl;
+                return input;
+            }
+            return VALID_ARG_MSG;
+        }
+
+        //  checking to see if Show if typed in
         if (args[i] == SHOW_CMD && (args.size() < 1 || args.size() > 1))
         {
             cout << SHOW_ARG_CNT_MSG << endl;
             cin.clear();
         }
-        // checking to see if Show if typed in
+        // SHOW
         if (args[i] == SHOW_CMD && args.size() == 1)
         {
-            cout<<"you entered show\n";
+            cout << "you entered show\n";
             return VALID_ARG_MSG;
         }
         // checking if there are 3 argmemtns
@@ -274,7 +295,8 @@ string validateArguments(vector<string> args, bool &succes)
             cout << CREATE_ARG_CNT_MSG << endl;
             cin.clear();
         }
-        // create command
+
+        // CREATE
         if (args[i] == CREATE_CMD && args.size() == 3)
         {
             cout << "welcome u have 3 arguments \n";
@@ -326,6 +348,7 @@ void executeCommand(vector<string> args)
     ofstream oFile; // output file
     ifstream iFile; // input file
     string filename = args[1];
+    //CREATE
     if (args[0] == CREATE_CMD)
     {
         oFile.open(filename + TABLE_FILETYPE);
@@ -345,9 +368,17 @@ void executeCommand(vector<string> args)
         oFile.close();
         cout << "table " << filename << TABLE_CREATE_SUCCESS_MSG;
     }
-    if (args[0] == SHOW_CMD){
-        cout<<"table printed\n";
+    //SHOW
+    if (args[0] == SHOW_CMD)
+    {
+        cout << "table printed\n";
         printTable("tables.csv");
+    }
+    //DELETE
+    if (args[0] == DELETE_CMD)
+    {
+        cout << "\nYour in delete\n";
+        
     }
 }
 // 2.1 add commandLoop() function
@@ -370,11 +401,11 @@ void commandLoop()
         {
             executeCommand(input);
         }
-        if(valid == VALID_ARG_MSG){
-            cout<<"herrerrre";
+        if (valid == VALID_ARG_MSG)
+        {
+            cout << "hererre";
             executeCommand(input);
         }
-
     }
 }
 // checking if the file is alph
