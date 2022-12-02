@@ -48,10 +48,11 @@ bool validateCredentials(string, string);
 void commandLoop();
 // Getting input
 vector<string> getInput();
-string validateArguments(vector<string> args);
+string validateArguments(vector<string> args, bool &succes);
 void executeCommand(vector<string> args);
 int removeDupWord(string str);
-bool is_only_alpha(const std::string &str);
+bool is_only_alpha(const string &str);
+bool is_file_exist(string fileName);
 
 // sections 2/3 add function prototypes
 // YOUR CODE HERE
@@ -222,7 +223,7 @@ vector<string> getInput()
     string input = " ";
 
     string token;
-cout<<endl;
+    cout << endl;
     cout << COMMAND_PROMPT;
     getline(cin, input);
     istringstream ss(input);
@@ -234,93 +235,182 @@ cout<<endl;
 }
 
 // 2.1 add validateArguments(vector<string>) function
-string validateArguments(vector<string> args)
+string validateArguments(vector<string> args, bool &succes)
 {
     string input = " ";
+    //
+    string filename = " ";
+    string input2 = " ";
 
- for (int i = 0; i < args.size(); i++)
+    for (int i = 0; i < args.size(); i++)
     {
         input += args[i];
+        input2 += args[i + 1];
     }
 
     for (int i = 0; i < args.size(); i++)
     {
-        cout << i <<args[i] << endl;
 
-
+        input2 += args[i + 1];
         // checking to see it quite is typed in
         if (args[i] == QUIT_CMD)
         {
             exit(0);
         }
-
-        if (args[i] == CREATE_CMD && (args.size() < 3 || args.size() > 3))
+        if (args[i] == SHOW_CMD && (args.size() < 1 || args.size() > 1))
         {
-            cout <<CREATE_ARG_CNT_MSG<<endl;
+            cout << SHOW_ARG_CNT_MSG << endl;
             cin.clear();
         }
-         if  (args[i] == CREATE_CMD && args.size() == 3)
+        // checking to see if Show if typed in
+        if (args[i] == SHOW_CMD && args.size() == 1)
         {
-            cout<<"welcome u have 3 arguments \n";
-              if(is_only_alpha(input) == false) {
-                cout<<CREATE_INV_HEADERS_MSG<<endl;
-                return input;
-              }
-           // we know its a alphanumeric character
-
-           //check if the file already exist 
-
-           //if not create a new file open and write to that file.
-
-              
+            cout<<"you entered show\n";
+            return VALID_ARG_MSG;
         }
-        
+        // checking if there are 3 argmemtns
+        if (args[i] == CREATE_CMD && (args.size() < 3 || args.size() > 3))
+        {
+            cout << CREATE_ARG_CNT_MSG << endl;
+            cin.clear();
+        }
+        // create command
+        if (args[i] == CREATE_CMD && args.size() == 3)
+        {
+            cout << "welcome u have 3 arguments \n";
+            if (is_only_alpha(input) == false)
+            {
+                cout << CREATE_INV_HEADERS_MSG << endl;
+                return input;
+            }
+            // we know its a alphanumeric character
 
-        
+            // check if the file already exist
+            filename = args[1];
+
+            if (is_file_exist(filename) == true)
+            {
+                return input;
+            }
+
+            for (int i = 0; i < input2.size(); ++i)
+            {
+                // checking if the file colums starts with comma
+                if (input2[1] == ',')
+                {
+                    cout << "can not start with a comma\n";
+                    cout << CREATE_INV_TABLE_NAME_MSG;
+                    break;
+                }
+                // checking if the file has 2 commas together
+                if (input2[i] == ',' && input2[i + 1] == ',')
+                {
+                    cout << "there are two comamas in a row\n";
+                    cout << CREATE_INV_TABLE_NAME_MSG;
+                    break;
+                }
+                // every thing is valid
+                cout << "\nvalid\n";
+                succes = true;
+                return VALID_ARG_MSG;
+            }
+        }
     }
 
-    cout<<input;
+    cout << input << endl;
     return input;
 }
 // 2.1 add executeCommand(vector<string>) function
 void executeCommand(vector<string> args)
 {
+    ofstream oFile; // output file
+    ifstream iFile; // input file
+    string filename = args[1];
+    if (args[0] == CREATE_CMD)
+    {
+        oFile.open(filename + TABLE_FILETYPE);
+        if (!oFile.is_open())
+        {
+            cout << "Error opening output file!\n";
+        }
+        oFile << args[2];
+        oFile.close();
+
+        oFile.open("tables.csv", ios_base::app);
+        if (!oFile.is_open())
+        {
+            cout << "Error opening TABLES_TABLE file!\n";
+        }
+        oFile << args[1];
+        oFile.close();
+        cout << "table " << filename << TABLE_CREATE_SUCCESS_MSG;
+    }
+    if (args[0] == SHOW_CMD){
+        cout<<"table printed\n";
+        printTable("tables.csv");
+    }
 }
 // 2.1 add commandLoop() function
 void commandLoop()
 {
 
     vector<string> input;
+    bool sucess = false;
     while (bool statues = true)
     {
 
         input = getInput();
-        string valid = validateArguments(input);
-        executeCommand(input);
+        string valid = validateArguments(input, sucess);
+
         if (valid == QUIT_CMD)
         {
             statues = false;
         }
+        if (sucess == true)
+        {
+            executeCommand(input);
+        }
+        if(valid == VALID_ARG_MSG){
+            cout<<"herrerrre";
+            executeCommand(input);
+        }
+
     }
 }
+// checking if the file is alph
+bool is_only_alpha(const string &str)
+{
 
- bool is_only_alpha(const std::string &str) {
-    
-    for (int i=1 ; i<str.size(); ++i) {
-        if (!isalnum(str[i])) {
-            
-            cout<<str[i]<<endl;
-            cout<<"noooooooooo "<< i<<endl;
-            
+    for (int i = 1; i < str.size(); ++i)
+    {
+        if (!isalnum(str[i]) && str[i] != ',' && str[i] != '_' && str[i] != '-')
+        {
+
+            cout << str[i] << endl;
+            cout << "noooooooooo " << i << endl;
+
             return false;
-            
         }
     }
     return true;
- }
+}
+// checking if the file already exits
+bool is_file_exist(string fileName)
+{
+    ifstream myfile;
 
-
-
+    myfile.open(TABLE_FILE_DIRECTORY + fileName + TABLE_FILETYPE);
+    if (myfile)
+    {
+        cout << "file already exists\n";
+        return true;
+    }
+    else
+    {
+        cout << "file doesn't exist\n";
+        return false;
+    }
+}
 
 /*
 DO NOT REMOVE
