@@ -274,7 +274,17 @@ string validateArguments(vector<string> args, bool &succes)
                 cout << DELETE_UNDELETABLE_MSG << endl;
                 return input;
             }
-            return VALID_ARG_MSG;
+            //checking to see if the file already exists
+            if (is_file_exist(args[1]) == true)
+            {
+                return VALID_ARG_MSG;
+            }
+            else
+            {
+                cout << DELETE_INV_TABLE_NAME_MSG << endl;
+                return input;
+            }
+            
         }
 
         //  checking to see if Show if typed in
@@ -348,7 +358,7 @@ void executeCommand(vector<string> args)
     ofstream oFile; // output file
     ifstream iFile; // input file
     string filename = args[1];
-    //CREATE
+    // CREATE
     if (args[0] == CREATE_CMD)
     {
         oFile.open(filename + TABLE_FILETYPE);
@@ -368,17 +378,20 @@ void executeCommand(vector<string> args)
         oFile.close();
         cout << "table " << filename << TABLE_CREATE_SUCCESS_MSG;
     }
-    //SHOW
+    // SHOW
     if (args[0] == SHOW_CMD)
     {
         cout << "table printed\n";
         printTable("tables.csv");
     }
-    //DELETE
+    // DELETE
     if (args[0] == DELETE_CMD)
     {
         cout << "\nYour in delete\n";
-        
+
+        //delete the file name inside tables table
+
+        //delete the file your tring the delete
     }
 }
 // 2.1 add commandLoop() function
@@ -430,7 +443,7 @@ bool is_file_exist(string fileName)
 {
     ifstream myfile;
 
-    myfile.open(TABLE_FILE_DIRECTORY + fileName + TABLE_FILETYPE);
+    myfile.open(fileName + TABLE_FILETYPE);
     if (myfile)
     {
         cout << "file already exists\n";
