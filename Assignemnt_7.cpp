@@ -53,7 +53,7 @@ void executeCommand(vector<string> args);
 int removeDupWord(string str);
 bool is_only_alpha(const string &str);
 bool is_file_exist(string fileName);
-void DeleteLine(string filename);
+void DeleteLine(string filename, vector<string> args);
 
 // sections 2/3 add function prototypes
 // YOUR CODE HERE
@@ -188,10 +188,7 @@ void getCredentials(int argc, char const *argv[], string &user, string &pass)
     user = argv[1];
     pass = argv[2];
 
-    for (int i = 0; i < argc; ++i)
-    {
-        cout << argv[i] << "\n";
-    }
+    
     // 1.1 get username and password from cmd args
     // YOUR CODE HERE
 }
@@ -239,23 +236,25 @@ vector<string> getInput()
 string validateArguments(vector<string> args, bool &succes)
 {
     string input = " ";
+    string args1 = args[1];
     //
     string filename = " ";
     string input2 = " ";
 
-    for (int i = 0; i < args.size(); i++)
+    for ( unsigned int i = 0; i < args.size(); i++)
     {
+        args[0] = toLower(args[0]);
+
         input += args[i];
         input2 += args[i + 1];
     }
-
-    for (int i = 0; i < args.size(); i++)
+    for (unsigned int i = 0; i < args.size(); i++)
     {
 
         input2 += args[i + 1];
         // QUIT
         //  checking to see it quite is typed in
-        if (args[i] == QUIT_CMD)
+        if ( args[i]== QUIT_CMD)
         {
             exit(0);
         }
@@ -263,7 +262,8 @@ string validateArguments(vector<string> args, bool &succes)
         // checking to see if Delete is typed n [
         if (args[i] == DELETE_CMD && (args.size() < 2 || args.size() > 2))
         {
-            cout << DELETE_ARG_CNT_MSG << endl;
+            cout << DELETE_ARG_CNT_MSG;
+            return input;
             cin.clear();
         }
         // DELETE
@@ -286,24 +286,25 @@ string validateArguments(vector<string> args, bool &succes)
                 return input;
             }
         }
-
-        //  checking to see if Show if typed in
-        if (args[i] == SHOW_CMD && (args.size() < 1 || args.size() > 1))
+        // SHOW
+        if (toLower(args[i]) == SHOW_CMD && (args.size() < 2 || args.size() > 2))
         {
             cout << SHOW_ARG_CNT_MSG << endl;
-            cin.clear();
+            return input;
         }
-        // SHOW
-        if (args[i] == SHOW_CMD && args.size() == 1)
+        if ( toLower(args[i]) == SHOW_CMD && args.size() == 2)
         {
-            cout << "you entered show\n";
             return VALID_ARG_MSG;
         }
+        //  checking to see if Show if typed in
+        
+
         // checking if there are 3 argmemtns
         if (args[i] == CREATE_CMD && (args.size() < 3 || args.size() > 3))
         {
             cout << CREATE_ARG_CNT_MSG << endl;
             cin.clear();
+            return input;
         }
 
         // CREATE
@@ -325,7 +326,7 @@ string validateArguments(vector<string> args, bool &succes)
                 return input;
             }
 
-            for (int i = 0; i < input2.size(); ++i)
+            for (unsigned int i = 0; i < input2.size(); ++i)
             {
                 // checking if the file colums starts with comma
                 if (input2[1] == ',')
@@ -347,9 +348,17 @@ string validateArguments(vector<string> args, bool &succes)
                 return VALID_ARG_MSG;
             }
         }
+        // when the input is something else
+        if (args[0] == "\n")
+        {
+            cout << INV_CMD_MSG;
+            return input;
+        }
+        cout << INV_CMD_MSG;
+        return input;
     }
 
-    cout << input << endl;
+    // cout << input << endl;
     return input;
 }
 // 2.1 add executeCommand(vector<string>) function
@@ -357,11 +366,11 @@ void executeCommand(vector<string> args)
 {
 
     // CREATE
-    if (args[0] == CREATE_CMD)
+    if ( toLower(args[0]) == CREATE_CMD)
     {
         ofstream oFile; // output file
         ifstream iFile; // input file
-        string filename = args[1];
+        string filename =  toLower(args[1]);
 
         oFile.open(filename + TABLE_FILETYPE);
         if (!oFile.is_open())
@@ -375,22 +384,22 @@ void executeCommand(vector<string> args)
 
         oFile << filename << endl;
         oFile.close();
-        cout << "table " << filename << TABLE_CREATE_SUCCESS_MSG << endl;
-        
+        cout << filename << TABLE_CREATE_SUCCESS_MSG << endl;
+        return;
     }
     // SHOW
-    if (args[0] == SHOW_CMD)
+    if (toLower(args[0]) == SHOW_CMD)
     {
-        cout << "table printed\n";
+        cout << "tables table\n";
         printTable("tables.csv");
     }
     // DELETE
-    if (args[0] == DELETE_CMD)
+    if (toLower(args[0]) == DELETE_CMD)
     {
         cout << "\nYour in delete\n";
         string deleteline = args[1];
         string filename = "tables.csv";
-        DeleteLine("tables.csv");
+        DeleteLine("tables.csv", args);
 
         // DeleteLine(filename, deleteline, args);
 
@@ -406,12 +415,11 @@ void commandLoop()
     vector<string> input;
     bool sucess = false;
 
-
-
     while (bool statues = true)
     {
-
+        
         input = getInput();
+
         string valid = validateArguments(input, sucess);
 
         if (valid == QUIT_CMD)
@@ -432,7 +440,7 @@ void commandLoop()
 bool is_only_alpha(const string &str)
 {
 
-    for (int i = 1; i < str.size(); ++i)
+    for (unsigned int i = 1; i < str.size(); ++i)
     {
         if (!isalnum(str[i]) && str[i] != ',' && str[i] != '_' && str[i] != '-')
         {
@@ -463,10 +471,10 @@ bool is_file_exist(string fileName)
     }
 }
 
-void DeleteLine(string filename)
+void DeleteLine(string filename, vector<string> args)
 {
 
-    int line_number;
+    string to_delete = args[1];
 
     // Prompt the user to enter the line number to delete in the file, store it
     // into line_number
@@ -493,15 +501,20 @@ void DeleteLine(string filename)
 
     // Close our access to the file since we are done reading with it
     read_file.close();
-    for (int i = 0; i < lines.size(); i++)
+
+    for (unsigned int i = 0; i < lines.size(); i++)
     {
         cout << lines[i] << endl;
     }
 
+    string file_open_removed = to_delete + TABLE_FILETYPE;
+    remove(filename.c_str());
+    remove(file_open_removed.c_str());
+
     ofstream write_file;
 
     // Open the file with the provided filename
-    write_file.open("copytable.csv");
+    write_file.open(filename);
 
     // If the file failed to open, exit with an error message and exit status
     if (write_file.fail())
@@ -509,16 +522,16 @@ void DeleteLine(string filename)
         cout << "Error opening file." << endl;
     }
 
-    line_number--;
-
     // Loop through the vector elements to write each line back to the file
     // EXCEPT the line we want to delete.
-    for (int i = 0; i < lines.size(); i++)
-        if (lines[i] != "table")
+    for (unsigned int i = 0; i < lines.size(); i++)
+        if (lines[i] != to_delete)
             write_file << lines[i] << endl;
 
     // Close our access to the file since we are done working with it
+    cout << TABLE_DELETE_SUCCESS_MSG;
     write_file.close();
+    lines.clear();
 }
 
 /*
