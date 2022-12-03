@@ -426,10 +426,6 @@ void commandLoop()
         {
             statues = false;
         }
-        if (sucess == true)
-        {
-            executeCommand(input);
-        }
         if (valid == VALID_ARG_MSG)
         {
             executeCommand(input);
