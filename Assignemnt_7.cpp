@@ -48,7 +48,7 @@ bool validateCredentials(string, string);
 void commandLoop();
 // Getting input
 vector<string> getInput();
-string validateArguments(vector<string> args, bool &succes);
+string validateArguments(vector<string> args);
 void executeCommand(vector<string> args);
 int removeDupWord(string str);
 bool is_only_alpha(const string &str);
@@ -84,18 +84,27 @@ int main(int argc, char const *argv[])
 // prints header
 void header()
 {
-    cout << "+---------------------------------------------------------------------+\n"
-         << "|   __   __  _______  _______  _     _    _______  _______  ___        | \n "
-         << "|  |  |_|  ||       ||       || | _ | |  |       ||       ||   |       | \n "
-         << "|  |       ||    ___||   _   || || || |  |  _____||   _   ||   |       | \n "
-         << "|  |       ||   |___ |  | |  ||       |  | |_____ |  | |  ||   |       | \n "
-         << "|  |       ||    ___||  |_|  ||       |  |_____  ||  |_|  ||   | _ __   | \n "
-         << "|  | ||_|| ||   |___ |       ||   _   |   _____| ||      | |         |   |\n "
-         << "|  |_|   |_||_______||_______||__| |__|  |_______||____||_|| _______ | | \n "
-         << "|                                                                    v1 .0.0 | \n "
-         << " + -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -+\n ";
-}
-// Used for section 2
+    cout << "+-----------------------------------------------------------------"
+            "----+\n"
+         << "|   __   __  _______  _______  _     _    _______  _______  ___   "
+            "    |\n"
+         << "|  |  |_|  ||       ||       || | _ | |  |       ||       ||   |  "
+            "    |\n"
+         << "|  |       ||    ___||   _   || || || |  |  _____||   _   ||   |  "
+            "    |\n"
+         << "|  |       ||   |___ |  | |  ||       |  | |_____ |  | |  ||   |  "
+            "    |\n"
+         << "|  |       ||    ___||  |_|  ||       |  |_____  ||  |_|  ||   "
+            "|___   |\n"
+         << "|  | ||_|| ||   |___ |       ||   _   |   _____| ||      | |      "
+            " |  |\n"
+         << "|  |_|   |_||_______||_______||__| |__|  "
+            "|_______||____||_||_______|  |\n"
+         << "|                                                               "
+            "v1.0.0|\n"
+         << "+-----------------------------------------------------------------"
+            "----+\n";
+} // Used for section 2
 // lowercases string and returns it
 string toLower(string s)
 {
@@ -129,7 +138,7 @@ bool printTable(string file)
     {
         toShow.clear();
         toShow.seekg(0);
-        cout << file.substr(file.find("data/") + 5, file.length() - 9) << "table : \n ";
+        cout << file.substr(file.find("data/") + 5, file.length() - 9) << " table : \n";
         cout
             << setfill('-')
             << right;
@@ -188,7 +197,6 @@ void getCredentials(int argc, char const *argv[], string &user, string &pass)
     user = argv[1];
     pass = argv[2];
 
-    
     // 1.1 get username and password from cmd args
     // YOUR CODE HERE
 }
@@ -233,7 +241,7 @@ vector<string> getInput()
 }
 
 // 2.1 add validateArguments(vector<string>) function
-string validateArguments(vector<string> args, bool &succes)
+string validateArguments(vector<string> args)
 {
     string input = " ";
     string args1 = args[1];
@@ -241,7 +249,7 @@ string validateArguments(vector<string> args, bool &succes)
     string filename = " ";
     string input2 = " ";
 
-    for ( unsigned int i = 0; i < args.size(); i++)
+    for (unsigned int i = 0; i < args.size(); i++)
     {
         args[0] = toLower(args[0]);
 
@@ -254,22 +262,21 @@ string validateArguments(vector<string> args, bool &succes)
         input2 += args[i + 1];
         // QUIT
         //  checking to see it quite is typed in
-        if ( args[i]== QUIT_CMD)
+        if (toLower(args[i]) == QUIT_CMD)
         {
             exit(0);
         }
 
         // checking to see if Delete is typed n [
-        if (args[i] == DELETE_CMD && (args.size() < 2 || args.size() > 2))
+        if (toLower(args[i]) == DELETE_CMD && (args.size() < 2 || args.size() > 2))
         {
             cout << DELETE_ARG_CNT_MSG;
             return input;
             cin.clear();
         }
         // DELETE
-        if (args[i] == DELETE_CMD && args.size() == 2)
+        if (toLower(args[i]) == DELETE_CMD && args.size() == 2)
         {
-            cout << "you entered delete\n";
             if (args[1] == SHOW_ARG_1)
             {
                 cout << DELETE_UNDELETABLE_MSG << endl;
@@ -292,15 +299,14 @@ string validateArguments(vector<string> args, bool &succes)
             cout << SHOW_ARG_CNT_MSG << endl;
             return input;
         }
-        if ( toLower(args[i]) == SHOW_CMD && args.size() == 2)
+        if (toLower(args[i]) == SHOW_CMD && args.size() == 2)
         {
             return VALID_ARG_MSG;
         }
         //  checking to see if Show if typed in
-        
 
         // checking if there are 3 argmemtns
-        if (args[i] == CREATE_CMD && (args.size() < 3 || args.size() > 3))
+        if (toLower(args[i]) == CREATE_CMD && (args.size() < 3 || args.size() > 3))
         {
             cout << CREATE_ARG_CNT_MSG << endl;
             cin.clear();
@@ -308,9 +314,8 @@ string validateArguments(vector<string> args, bool &succes)
         }
 
         // CREATE
-        if (args[i] == CREATE_CMD && args.size() == 3)
+        if (toLower(args[i]) == CREATE_CMD && args.size() == 3)
         {
-            cout << "welcome u have 3 arguments \n";
             if (is_only_alpha(input) == false)
             {
                 cout << CREATE_INV_HEADERS_MSG << endl;
@@ -331,20 +336,18 @@ string validateArguments(vector<string> args, bool &succes)
                 // checking if the file colums starts with comma
                 if (input2[1] == ',')
                 {
-                    cout << "can not start with a comma\n";
+
                     cout << CREATE_INV_TABLE_NAME_MSG;
                     break;
                 }
                 // checking if the file has 2 commas together
-                if (input2[i] == ',' && input2[i + 1] == ',')
+                if (input[i] == ',' && input[i + 1] == ',')
                 {
-                    cout << "there are two comamas in a row\n";
+
                     cout << CREATE_INV_TABLE_NAME_MSG;
                     break;
                 }
                 // every thing is valid
-                cout << "\nvalid\n";
-                succes = true;
                 return VALID_ARG_MSG;
             }
         }
@@ -366,13 +369,13 @@ void executeCommand(vector<string> args)
 {
 
     // CREATE
-    if ( toLower(args[0]) == CREATE_CMD)
+    if (toLower(args[0]) == CREATE_CMD)
     {
         ofstream oFile; // output file
         ifstream iFile; // input file
-        string filename =  toLower(args[1]);
+        string filename = toLower(args[1]);
 
-        oFile.open(filename + TABLE_FILETYPE);
+        oFile.open(toLower(filename) + TABLE_FILETYPE);
         if (!oFile.is_open())
         {
             cout << "Error opening output file!\n";
@@ -384,19 +387,19 @@ void executeCommand(vector<string> args)
 
         oFile << filename << endl;
         oFile.close();
-        cout << filename << TABLE_CREATE_SUCCESS_MSG << endl;
+        cout << args[1] << TABLE_CREATE_SUCCESS_MSG << endl;
         return;
     }
     // SHOW
     if (toLower(args[0]) == SHOW_CMD)
     {
-        cout << "tables table\n";
+        cout << args[1];
         printTable("tables.csv");
     }
     // DELETE
     if (toLower(args[0]) == DELETE_CMD)
     {
-        cout << "\nYour in delete\n";
+
         string deleteline = args[1];
         string filename = "tables.csv";
         DeleteLine("tables.csv", args);
@@ -413,19 +416,14 @@ void commandLoop()
 {
 
     vector<string> input;
-    bool sucess = false;
 
-    while (bool statues = true)
+    while (true)
     {
-        
+
         input = getInput();
 
-        string valid = validateArguments(input, sucess);
+        string valid = validateArguments(input);
 
-        if (valid == QUIT_CMD)
-        {
-            statues = false;
-        }
         if (valid == VALID_ARG_MSG)
         {
             executeCommand(input);
@@ -440,10 +438,6 @@ bool is_only_alpha(const string &str)
     {
         if (!isalnum(str[i]) && str[i] != ',' && str[i] != '_' && str[i] != '-')
         {
-
-            cout << str[i] << endl;
-            cout << "noooooooooo " << i << endl;
-
             return false;
         }
     }
@@ -462,7 +456,6 @@ bool is_file_exist(string fileName)
     }
     else
     {
-        cout << "file doesn't exist\n";
         return false;
     }
 }
@@ -498,11 +491,6 @@ void DeleteLine(string filename, vector<string> args)
     // Close our access to the file since we are done reading with it
     read_file.close();
 
-    for (unsigned int i = 0; i < lines.size(); i++)
-    {
-        cout << lines[i] << endl;
-    }
-
     string file_open_removed = to_delete + TABLE_FILETYPE;
     remove(filename.c_str());
     remove(file_open_removed.c_str());
@@ -529,10 +517,3 @@ void DeleteLine(string filename, vector<string> args)
     write_file.close();
     lines.clear();
 }
-
-/*
-DO NOT REMOVE
-Copyright 2022 Alex St. Aubin. All Rights Reserved.
-Unauthorized reproductions of this handout and any accompanying code
-are strictly forbidden under Nevada State and US Federal law.
-*/
